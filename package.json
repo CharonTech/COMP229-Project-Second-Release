@@ -1,0 +1,11 @@
+{
+  "name": "tournament",
+  "version": "1.0.0",
+  "description": "tournament group project for comp 229",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pablo saldarriaga",
+  "license": "ISC"
+}
