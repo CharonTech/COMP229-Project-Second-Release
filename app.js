@@ -1,6 +1,25 @@
 const express = require("express");
 const app = express();
 
+
+// Body parsers
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+
+// URI
+let DB = require('./server/config/db');
+
+//Db stuff
+const mongoose = require("mongoose");
+mongoose
+  .connect(process.env.URI || DB.URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
+
+
 // Declaring static paths
 app.use(express.static("public"));
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js")); // redirect bootstrap JS
@@ -21,6 +40,7 @@ app.use(expressLayouts);
 
 // Routes
 app.use("/", require("./server/routes/index"));
+app.use("/tournament", require("./server/routes/tournament"));
 
 // Setting port to listen too
 const PORT = process.env.PORT || 3000;
