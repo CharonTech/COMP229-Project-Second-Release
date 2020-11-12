@@ -1,0 +1,25 @@
+let mongoose = require('mongoose');
+
+let UserSchema = mongoose.Schema({
+    _id: String,
+    username: String,
+    email: String,
+    firstName: String,
+    lastName: String,
+    emailAddress: String,
+    dateCreated: 
+    {
+        type: Date,
+        default: Date.now()
+    }
+},
+{
+    collection: 'users'
+});
+
+//configure options for our User model
+let options = ({missingPasswordError: 'Incorrect password!'});
+
+UserSchema.plugin(passportLocalMongoose, options);
+
+module.exports.userModel = mongoose.Model('User', UserSchema);
