@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-
+const passport = require('passport');
 
 // Body parsers
 app.use(express.urlencoded({extended: true}));
@@ -40,7 +40,7 @@ app.use(expressLayouts);
 
 // Routes
 app.use("/", require("./server/routes/index"));
-app.use("/tournament", require("./server/routes/tournament"));
+app.use("/tournaments", require("./server/routes/tournament"));
 
 // Setting port to listen too
 const PORT = process.env.PORT || 3000;
