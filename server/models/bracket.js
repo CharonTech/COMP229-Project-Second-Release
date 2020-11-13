@@ -1,4 +1,4 @@
-let mongoose = require('mongoose');
+/*let mongoose = require('mongoose');
 
 let BracketSchema = mongoose.Schema({
     _id: String,
@@ -15,4 +15,4 @@ let BracketSchema = mongoose.Schema({
     collection: 'brackets'
 });
 
-module.exports.bracketModel = mongoose.model('Bracket', BracketSchema);
+module.exports.bracketModel = mongoose.model('Bracket', BracketSchema);*/

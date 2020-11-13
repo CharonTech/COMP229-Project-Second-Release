@@ -5,15 +5,18 @@
     <legend>Basic Info</legend>
       <div class="form-group">
       <label for="title">Tournament Name</label>
-        <input name="title" type="text" class="form-control" id="tournamentName" required>
+        <input name="title" type="text" class="form-control" id="tournamentName" value="<%= tournament.title %>" required>
       </div>
       </fieldset>
       <fieldset>
     <legend>About game</legend>
       <div class="form-group">
       <label for="game">Name of game</label>
-        <input name="game" type="text" class="form-control" id="nameGame" required placeholder="Game being played">
+        <input name="game" type="text" class="form-control" id="nameGame" placeholder="Game being played" value="<%= tournament.game %>" required>
       </div>
+      
+      
+      <!--
       <div class="form-group" >
       <label for="beginsAt">Begin at</label>
         <input name="beginsAt" type="date" class="form-control" id="beginDate">
@@ -39,5 +42,6 @@
         <button type ="submit" class="btn btn-primary">Save the Tournament</button>    
       </fieldset>  
     </div> 
+    -->
   </form>  
 </div>
