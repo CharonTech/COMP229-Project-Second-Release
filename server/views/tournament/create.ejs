@@ -1,86 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-
-
-
-<div class="container">
-<!--Logo Insertion-->
-<a href="/"><img src="/assets/images/logo.png" class="rounded" alt="Logo" width="100"> </a>
- 
-
-<h1>New Tournament</h1>
-
-
-   <form>
-   <fieldset>
-   <legend>Basic Info</legend>
-   <div class="form-group >
-     <label for="owner">Owner</label>
-      <input type="text" class="form-control" id="owner">
-    </div>
-    <div class="form-group >
-     <label for="tournamentName">Tournament Name</label>
-      <input type="text" class="form-control" id="tournamentName" required>
-    </div>
-<p>not sure of url</p>
-    </fieldset>
+<div class="container" id="createTop">
+  <h1>New Tournament</h1>
+    <form method="POST">
     <fieldset>
-   <legend>About game</legend>
-    <div class="form-group >
-     <label for="game">Name of game</label>
-      <input type="text" class="form-control" id="nameGame" required placeholder="Game being played">
-    </div>
-    <div class="form-group >
-     <label for="beginDate">Begin at</label>
-      <input type="date" class="form-control" id="beginDate">
-    </div>
-    <div class="form-group >
-     <label for="EndDate">End at</label>
-      <input type="date" class="form-control" id="endDate">
- </div>
- <fieldset>
-    <legend>Players Info</legend>
-     
-   
-     <div class="form-group">
-      <label class="participantNames">Participants</label>
-       <textarea class="form-control" id="participantNames">
-     </div>
-     
-     <div class="form-check">
+    <legend>Basic Info</legend>
+      <div class="form-group">
+      <label for="title">Tournament Name</label>
+        <input name="title" type="text" class="form-control" id="tournamentName" required>
+      </div>
+      </fieldset>
+      <fieldset>
+    <legend>About game</legend>
+      <div class="form-group">
+      <label for="game">Name of game</label>
+        <input name="game" type="text" class="form-control" id="nameGame" required placeholder="Game being played">
+      </div>
+      <div class="form-group" >
+      <label for="beginsAt">Begin at</label>
+        <input name="beginsAt" type="date" class="form-control" id="beginDate">
+      </div>
+      <div class="form-group" >
+      <label for="endsAt">End at</label>
+        <input name="endsAt" type="date" class="form-control" id="endDate">
+      </div>
+      <fieldset>
+        <legend>Players Info</legend>   
+        <div class="form-group">
+          <label for="participantNames">Participants</label>
+          <textarea name="participantNames" class="form-control" id="participantNames"></textarea>
+        </div>
+      </fieldset>
+      <div class="form-check">
         <label class="seeds" for="seeds">
-            Randomize seeds
-          </label>
+          Randomize seeds
+        </label>
         <input type="checkbox" id="randomizeSeeds">
-        </div>
- 
-     </fieldset>
-    <button type ="submit" class="btn btn-primary">Save the Tournament</button>
-    
- </fieldset>
- 
-  
-  
- 
-  
-  
-  </div>
-  
-  
- 
-</form>
-
- 
-
-
-
-                 <!-- Footer-->
-    <footer class="bg-light py-5">
-        <div class="container">
-            <div class="small text-center text-muted">Copyright © 2020 - CharonTech Incorporated</div>
-        </div>
-    </footer>
-
-</body>
-
-</html>
+      </div>
+      <fieldset>
+        <button type ="submit" class="btn btn-primary">Save the Tournament</button>    
+      </fieldset>  
+    </div> 
+  </form>  
+</div>

@@ -1,0 +1,1 @@
+{"_id":{"$oid":"5fae164db9e63111a8ae3ff3"},"tournamentType":"Single-Elimination","title":"Custom","game":"Basketball","beginsAt":{"$date":"2020-11-12T00:00:00Z"},"endsAt":{"$date":"2020-11-20T00:00:00Z"},"__v":0}

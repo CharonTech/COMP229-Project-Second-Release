@@ -15,4 +15,4 @@ let BracketSchema = mongoose.Schema({
     collection: 'brackets'
 });
 
-module.exports.bracketModel = mongoose.Model('Bracket', BracketSchema);
+module.exports.bracketModel = mongoose.model('Bracket', BracketSchema);
