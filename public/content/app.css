@@ -192,10 +192,7 @@ header.masthead h1 {
 .text-white-75 {
   color: rgba(255, 255, 255, 0.75);
 }
-#createTop{
+.margined{
   margin-top: 9rem;
-}
-
-#tournamentsList {
-  margin-top: 100px;
+  margin-bottom: 3rem;
 }

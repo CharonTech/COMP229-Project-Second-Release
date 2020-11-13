@@ -16,7 +16,7 @@
   </head>
   <body>
   <!-- Navigation-->
-  <% if(title == "Create Tournament") {%>
+  <% if(title == "Create Tournament" || title == "Tournaments" || title == "Edit Tournament") {%>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav" style="background-color: rgba(0, 0, 0, 0.5);">
   <%} else {%>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
@@ -41,10 +41,10 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/scripts/app.js"></script>
   </body>
+  <!-- Footer-->
+  <footer class="bg-light py-5">
+      <div class="container">
+          <div class="small text-center text-muted">Copyright © 2020 - CharonTech Incorporated</div>
+      </div>
+  </footer>
 </html>
-<!-- Footer-->
-<footer class="bg-light py-5">
-    <div class="container">
-        <div class="small text-center text-muted">Copyright © 2020 - CharonTech Incorporated</div>
-    </div>
-</footer>

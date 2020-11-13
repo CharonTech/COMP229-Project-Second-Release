@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const moment = require('moment');
 
 // define the Tournament model
 const Tournament = require("../models/tournament");
@@ -13,7 +14,8 @@ router.get('/', (req, res, next) => {
       else {
         res.render('tournament/list', {
           title: 'Tournaments',
-          tournaments: tournaments
+          tournaments: tournaments,
+          moment: moment
         });
       }
     });
@@ -29,11 +31,10 @@ router.get("/create", (req, res) => {
 router.post("/create", (req, res) => {
     //let participants = req.body.participantNames.split('\n');
     let newTournament = Tournament({
-        //"_id": req.body.id,
         "title": req.body.title,
-        "game": req.body.game
-        //"beginsAt": req.body.beginsAt,
-        //"endsAt": req.body.endsAt
+        "game": req.body.game,
+        "beginsAt": req.body.beginsAt,
+        "endsAt": req.body.endsAt
     });
     Tournament.create(newTournament, (err) =>{
         if(err)

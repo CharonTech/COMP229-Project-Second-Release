@@ -4,14 +4,14 @@ let bracket = require('./bracket')
 
 let tournamentModel = mongoose.Schema({
     title: String,
-    /*tournamentType: {
+    tournamentType: {
         type: String,
         default: 'Single-Elimination'
-    },*/
+    },
     /* owner?: user.userModel, */
-    game: String
-    //beginsAt: Date,
-    //endsAt: Date,
+    game: String,
+    beginsAt: Date,
+    endsAt: Date,
     /* URL?: String, */
     /* brackets: [bracket.bracketModel] */
 },
