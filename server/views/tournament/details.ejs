@@ -1,0 +1,47 @@
+<div class="container margined">
+  <h1>New Tournament</h1>
+    <form method="POST">
+      <fieldset>
+        <legend>Basic Info</legend>
+          <div class="form-group">
+            <label for="title">Tournament Name</label>
+            <input name="title" type="text" class="form-control" id="tournamentName" value="<%= tournament.title %>" required>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>About game</legend>
+          <div class="form-group">
+          <label for="game">Name of game</label>
+          <input name="game" type="text" class="form-control" id="nameGame" placeholder="Game being played" value="<%= tournament.game %>" required>
+        </div>
+
+        <div class="form-group" >
+          <label for="beginsAt">Begin at</label>
+          <input name="beginsAt" type="date" class="form-control" id="beginDate">
+        </div>
+        <div class="form-group" >
+          <label for="endsAt">End at</label>
+          <input name="endsAt" type="date" class="form-control" id="endDate">
+        </div>
+        <fieldset>
+          <legend>Players Info</legend>   
+          <div class="form-group">
+            <label for="participantNames">Participants</label>
+            <textarea name="participantNames" class="form-control" id="participantNames"></textarea>
+          </div>
+        </fieldset>
+        <!--
+        <div class="form-check">
+          <label class="seeds" for="seeds">
+            Randomize seeds
+          </label>
+          <input type="checkbox" id="randomizeSeeds">
+        </div>
+        -->
+      <fieldset>
+        <button type ="submit" class="btn btn-primary">Save the Tournament</button>    
+      </fieldset> 
+    
+  </form>  
+</div>

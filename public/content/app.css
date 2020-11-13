@@ -192,3 +192,7 @@ header.masthead h1 {
 .text-white-75 {
   color: rgba(255, 255, 255, 0.75);
 }
+.margined{
+  margin-top: 9rem;
+  margin-bottom: 3rem;
+}
