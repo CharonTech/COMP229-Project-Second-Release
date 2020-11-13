@@ -1,0 +1,45 @@
+<!-- MAIN CONTENT -->
+    <div class="container" id="tournamentsList">
+      <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+          <h3>All Tournaments</h3>
+
+          <!-- Add button -->
+          <a href="/tournaments/create" class="btn btn-primary"><i class="fa fa-plus"></i> Add a book</a>
+          
+          <br>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th class="text-center">Game Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Template Row -->
+                <% for (let count = 0; count < tournaments.length; count++) { %>
+                <tr>
+                  <td><%= tournaments[count].title %></td>
+                  <td class="text-center"><%= tournaments[count].game %></td>
+
+                  <!-- Edit button -->
+                  <td class="text-center">
+                    <a href="/tournaments/edit/<%= tournaments[count]._id %>" class="btn btn-primary btn-sm">Edit</a>
+                  </td>
+
+                  <!-- Delete button -->
+                  <td class="text-center">
+                    <a href="/tournaments/delete/<%= tournaments[count]._id %>" class="btn btn-danger btn-sm">Delete</a>
+                  </td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+           <div class="col-md-offset-1 col-md-10 text-center">
+            <ul class="pagination pagination-lg pager" id="myPager"></ul>
+          </div>
+        </div>
+      </div>
+    </div>

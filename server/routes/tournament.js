@@ -3,6 +3,23 @@ const router = require("express").Router();
 // define the Tournament model
 const Tournament = require("../models/tournament");
 
+/* GET Tournament List page. READ */
+router.get('/', (req, res, next) => {
+    // find all tournaments in the tournaments collection
+    Tournament.find( (err, tournaments) => {
+      if (err) {
+        return console.error(err);
+      }
+      else {
+        res.render('tournament/list', {
+          title: 'Tournaments',
+          tournaments: tournaments
+        });
+      }
+    });
+  
+  });
+
 /* Display the Create tournament page */
 router.get("/create", (req, res) => {
     res.render('tournament/details', {title: "Create Tournament", tournament: ""});
@@ -26,8 +43,8 @@ router.post("/create", (req, res) => {
         }
         else
         {
-            //refresh the tournament list (home page)
-            res.redirect('/');
+            //refresh the tournament list
+            res.redirect('/tournaments');
         }
     });
 });
@@ -68,8 +85,8 @@ router.post('/edit/:id', (req, res, next) => {
         }
         else
         {
-            // refresh the tournament list (home page)
-            res.redirect('/');
+            // refresh the tournament list
+            res.redirect('/tournaments');
         }
     });
 });
@@ -86,8 +103,8 @@ router.get('/delete/:id', (req, res, next) => {
         }
         else
         {
-             // refresh the tournament list (home page)
-             res.redirect('/');
+             // refresh the tournament list
+             res.redirect('/tournaments');
         }
     });
 });

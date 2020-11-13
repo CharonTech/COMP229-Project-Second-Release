@@ -42,6 +42,7 @@ app.use(expressLayouts);
 app.use("/", require("./server/routes/index"));
 app.use("/tournaments", require("./server/routes/tournament"));
 
+
 // Setting port to listen too
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, console.log(`Listening on http://localhost:${PORT}`));
