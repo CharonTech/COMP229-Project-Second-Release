@@ -24,7 +24,7 @@ router.get('/', (req, res, next) => {
 
 /* Display the Create tournament page */
 router.get("/create", (req, res) => {
-    res.render('tournament/details', {title: "Create Tournament", tournament: ""});
+    res.render('tournament/details', {title: "Create Tournament", tournament: "", moment: moment});
 });
 
 /* POST request for the Create page */
