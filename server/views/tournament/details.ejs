@@ -18,11 +18,11 @@
 
         <div class="form-group" >
           <label for="beginsAt">Begin at</label>
-          <input name="beginsAt" type="date" class="form-control" id="beginDate">
+          <input name="beginsAt" type="date" class="form-control" id="beginDate" value="<%= moment(tournament.beginsAt).format("YYYY-MM-DD") %>">
         </div>
         <div class="form-group" >
           <label for="endsAt">End at</label>
-          <input name="endsAt" type="date" class="form-control" id="endDate">
+          <input name="endsAt" type="date" class="form-control" id="endDate" value="<%= moment(tournament.endsAt).format("YYYY-MM-DD") %>">
         </div>
         <fieldset>
           <legend>Players Info</legend>   

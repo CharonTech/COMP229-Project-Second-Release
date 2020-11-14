@@ -63,7 +63,7 @@ router.get('/edit/:id', (req, res, next) => {
         else
         {
             //show the edit view
-            res.render('tournament/details', {title: 'Edit Tournament', tournament: tournamentToEdit})
+            res.render('tournament/details', {title: 'Edit Tournament', tournament: tournamentToEdit, moment: moment})
         }
     });
 });
