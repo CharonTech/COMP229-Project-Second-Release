@@ -75,7 +75,9 @@ router.post('/edit/:id', (req, res, next) => {
     let updatedTournament = Tournament({
         "_id": id,
         "title": req.body.title,
-        "game": req.body.game
+        "game": req.body.game,
+        "beginsAt": new Date(req.body.beginsAt + 1000*60),
+        "endsAt": new Date(req.body.endsAt) + 1
     });
 
     Tournament.updateOne({_id: id}, updatedTournament, (err) => {
