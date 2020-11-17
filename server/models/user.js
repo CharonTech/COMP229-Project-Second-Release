@@ -3,7 +3,6 @@ let passportLocalMongoose = require('passport-local-mongoose');
 
 let UserSchema = mongoose.Schema({
     username: String,
-    email: String,
     firstName: String,
     lastName: String,
     emailAddress: String,
