@@ -14,9 +14,14 @@
 
     <title><%= title %></title>
   </head>
+  <% if (title == "Register") {%>
+  <body id="registerMain">
+  <%} else {%>
   <body>
+  <%}%>
+  
   <!-- Navigation-->
-  <% if(title == "Home Page") {%>
+  <% if(title == "Home Page" || title == "Register") {%>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
   <%} else {%>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav" style="background-color: rgba(0, 0, 0, 0.5);">
@@ -44,7 +49,7 @@
     <script src="/scripts/app.js"></script>
   </body>
   <!-- Footer-->
-  <footer class="bg-light py-5">
+  <footer class="bg-dark py-5">
       <div class="container">
           <div class="small text-center text-muted">Copyright © 2020 - CharonTech Incorporated</div>
       </div>
