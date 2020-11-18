@@ -79,4 +79,58 @@ router.post('/register', (req, res, next) => {
   });
 });
 
+
+//Display login page
+router.get("/login",(req,res)=>{
+  if(!req.user)
+  {
+    res.render('auth/login',
+    {
+      title:"Login",
+      messages:req.flash("LoginMessage"),
+      
+    });
+  }
+  else
+  {
+    return res.redirect('/');
+  }
+});
+//process login page
+router.post('/login',(req,res,next)=>{
+  console.log('we reached post');
+  passport.authenticate('local',
+  (err,user,info)=>
+  {
+    //server err
+    if(err)
+    {
+      //return next(err);
+      console.log(err);
+      res.end(err);
+    }
+    //if user login error
+    if(!user)
+    {
+      req.flash('loginMessage','Authentication Error');
+      return res.redirect('/login');
+    }
+    req.login(user,(err)=>
+    {
+      //server error
+      if(err)
+      {
+       // return next(err);
+       console.log (err);
+       res.end(err);
+      }
+
+      return res.redirect('/tournaments');
+    });
+  }
+  )
+})
+
+
+
 module.exports = router;
