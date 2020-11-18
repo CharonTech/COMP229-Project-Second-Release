@@ -51,17 +51,13 @@ app.use(session({
 //flash (message display)
 app.use(flash());
 
-// Routes
-app.use("/", require("./server/routes/index"));
-app.use("/tournaments", require("./server/routes/tournament"));
-
-
-// import user model
-const User = require('./server/models/user').userModel;
 
 //initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// import user model
+const User = require('./server/models/user').userModel;
 
 //implement a user authentication strategy
 passport.use(User.createStrategy());
@@ -70,7 +66,11 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-passport.use(localStrategy);
+//passport.use(localStrategy);
+
+// Routes
+app.use("/", require("./server/routes/index"));
+app.use("/tournaments", require("./server/routes/tournament"));
 
 // Setting port to listen too
 const PORT = process.env.PORT || 3000;
