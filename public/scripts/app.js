@@ -1,5 +1,4 @@
 (function(){
-    const [red, green, blue] = [200, 200, 200];
     const registerForm = document.querySelector('#registerForm');
     const mainNav = document.querySelector('#mainNav');
     
