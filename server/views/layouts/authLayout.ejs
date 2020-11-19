@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head.ejs') -%>
+  </head>
+
+  <body id="registerMain">
+  
+    <%- include('../partials/main_nav.ejs') -%>
+    <main class="container margined">
+        <!-- Message Area-->
+        <% if(messages.length > 0) {%>
+            <div class="alert alert-danger">
+                <%= messages %>
+            </div>
+        <% } %>
+
+        <div class="row">
+            <div class="offset-md-4 col-md-4" id="registerForm">
+                <h1><%= heading %></h1>
+                <form method="POST" autocomplete="off" >
+                    <%- body %>
+                </form>
+            </div>
+        </div>
+    </main>
+    <%- include('../partials/footer.ejs') -%>
+
+  </body>
+</html>

@@ -11,7 +11,7 @@ let tournamentModel = mongoose.Schema({
     /* owner?: user.userModel, */
     game: String,
     beginsAt: Date,
-    endsAt: Date,
+    endsAt: Date
     /* URL?: String, */
     /* brackets: [bracket.bracketModel] */
 },

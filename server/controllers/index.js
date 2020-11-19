@@ -28,8 +28,10 @@ module.exports.displayRegisterPage = (req, res) => {
     if (!req.user) {
         res.render('auth/register',
             {
+                layout: 'layouts/authLayout',
                 title: "Register",
                 messages: req.flash("registerMessage"),
+                heading: "Registration",
                 displayName: req.user ? req.user.firstName : ''
             });
     }
@@ -79,8 +81,10 @@ module.exports.displayLoginPage = (req, res) => {
     if (!req.user) {
         res.render('auth/login',
             {
+                layout: "layouts/authLayout",
                 title: "Login",
-                messages: req.flash("LoginMessage")
+                messages: req.flash("loginMessage"),
+                heading: "User Login"
             });
     }
     else {
@@ -94,9 +98,7 @@ module.exports.processLoginPage = (req, res, next) => {
         (err, user, info) => {
             //server err
             if (err) {
-                //return next(err);
-                console.log(err);
-                res.end(err);
+                return next(err);
             }
             //if user login error
             if (!user) {
@@ -107,9 +109,7 @@ module.exports.processLoginPage = (req, res, next) => {
                 req.login(user, (err) => {
                     //server error
                     if (err) {
-                        // return next(err);
-                        console.log(err);
-                        res.end(err);
+                        return next(err);
                     }
 
                     return res.redirect('/tournaments');
@@ -117,4 +117,9 @@ module.exports.processLoginPage = (req, res, next) => {
             }
         }
     )(req, res, next);
+};
+
+module.exports.PerformLogout = (req, res, next) => {
+  req.logout();
+  res.redirect('/');
 };

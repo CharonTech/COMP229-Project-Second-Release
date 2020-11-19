@@ -16,4 +16,7 @@ router.get("/login", indexController.displayLoginPage);
 /* POST request for Login Page */
 router.post('/login', indexController.processLoginPage);
 
+/* Perform logout */
+router.get('/logout', indexController.PerformLogout);
+
 module.exports = router;
