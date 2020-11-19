@@ -32,7 +32,7 @@ module.exports.displayRegisterPage = (req, res) => {
                 title: "Register",
                 messages: req.flash("registerMessage"),
                 heading: "Registration",
-                displayName: req.user ? req.user.firstName : ''
+                lastName: req.user ? req.user.lastName : ''
             });
     }
     else {
@@ -60,9 +60,11 @@ module.exports.processRegisterPage = (req, res) => {
             }
             return res.render('auth/register',
                 {
+                    layout: "layouts/authLayout",
                     title: "Register",
                     messages: req.flash("registerMessage"),
-                    displayName: req.user ? req.user.displayName : ''
+                    lastName: req.user ? req.user.lastName : '',
+                    heading: "Registration"
                 });
         }
         else {
