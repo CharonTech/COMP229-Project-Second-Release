@@ -1,5 +1,5 @@
 let mongoose = require('mongoose');
-let user = require('./user');
+let User = require('./user').UserSchema;
 let bracket = require('./bracket')
 
 let tournamentModel = mongoose.Schema({
@@ -8,7 +8,11 @@ let tournamentModel = mongoose.Schema({
         type: String,
         default: 'Single-Elimination'
     },
-    /* owner?: user.userModel, */
+    owner:
+    {
+        type: User,
+        required: false
+    },
     game: String,
     beginsAt: Date,
     endsAt: Date

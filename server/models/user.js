@@ -22,3 +22,4 @@ let options = ({missingPasswordError: 'Incorrect password!'});
 UserSchema.plugin(passportLocalMongoose, options);
 
 module.exports.userModel = mongoose.model('User', UserSchema);
+module.exports.UserSchema = UserSchema;

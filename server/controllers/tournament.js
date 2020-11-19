@@ -6,6 +6,7 @@ const Tournament = require("../models/tournament");
 // Display Tournament List Page
 module.exports.displayTournaments = (req, res, next) => {
     // find all tournaments in the tournaments collection
+    console.log(req.user);
     Tournament.find((err, tournaments) => {
         if (err) {
             return console.error(err);
@@ -14,7 +15,9 @@ module.exports.displayTournaments = (req, res, next) => {
             res.render('tournament/list', {
                 title: 'Tournaments',
                 tournaments: tournaments,
-                moment: moment
+                moment: moment,
+                lastName: req.user ? req.user.lastName : "",
+                currentUser: req.user
             });
         }
     });
@@ -22,7 +25,12 @@ module.exports.displayTournaments = (req, res, next) => {
 
 // Display Create Tournament Page
 module.exports.displayCreatePage = (req, res) => {
-    res.render('tournament/details', { title: "Create Tournament", tournament: "", moment: moment });
+    res.render('tournament/details',
+        {
+            title: "Create Tournament",
+            tournament: "",
+            moment: moment
+        });
 };
 
 // Process Create Tournament Page
@@ -31,6 +39,7 @@ module.exports.processCreatePage = (req, res) => {
     let newTournament = Tournament({
         "title": req.body.title,
         "game": req.body.game,
+        "owner": req.user,
         "beginsAt": req.body.beginsAt,
         "endsAt": req.body.endsAt
     });
@@ -69,6 +78,7 @@ module.exports.processEditPage = (req, res, next) => {
     let updatedTournament = Tournament({
         "_id": id,
         "title": req.body.title,
+        "owner": req.user,
         "game": req.body.game,
         "beginsAt": new Date(req.body.beginsAt + 1000*60),
         "endsAt": new Date(req.body.endsAt) + 1
