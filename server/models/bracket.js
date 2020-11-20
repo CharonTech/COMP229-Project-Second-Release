@@ -1,18 +1,14 @@
-/*let mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
 let BracketSchema = mongoose.Schema({
-    _id: String,
-    totalParticipants: Number,
-    randomSeed: Boolean,
-    participants: {
-        _id: String,
-        firstName: String,
-        lastName: String,
-        seed: Number
-    }
-},
-{
-    collection: 'brackets'
+    tournament: { type: mongoose.Types.ObjectId, required: true, index: true },
+    team1: { type: Number, default: -1 },
+    team2: { type: Number, default: -1 },
+    score1: { type: Number, default: 0 },
+    socre2: { type: Number, default: 0 },
+    parent: mongoose.Types.ObjectId,
+    children: [mongoose.Types.ObjectId], // must have either 0 or 2 items; default is []
+    isFirstWon: { type: Boolean, default: undefined }
 });
 
-module.exports.bracketModel = mongoose.model('Bracket', BracketSchema);*/
+module.exports = mongoose.model('Bracket', BracketSchema, 'brackets');
