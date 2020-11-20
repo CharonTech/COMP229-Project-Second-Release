@@ -3,6 +3,7 @@ const moment = require('moment');
 
 // define the Tournament model
 const Tournament = require("../models/tournament");
+const TournamentController = require('../controllers/tournament');
 
 /* GET Tournament List page. READ */
 router.get('/', (req, res, next) => {
@@ -19,7 +20,7 @@ router.get('/', (req, res, next) => {
         });
       }
     });
-  
+
   });
 
 /* Display the Create tournament page */
@@ -29,22 +30,19 @@ router.get("/create", (req, res) => {
 
 /* POST request for the Create page */
 router.post("/create", (req, res) => {
-    //let participants = req.body.participantNames.split('\n');
-    let newTournament = Tournament({
-        "title": req.body.title,
-        "game": req.body.game,
-        "beginsAt": req.body.beginsAt,
-        "endsAt": req.body.endsAt
-    });
-    Tournament.create(newTournament, (err) =>{
-        if(err)
-        {
+    const participants = req.body.participantNames.split('\n');
+    TournamentController.createTournament({
+        title: req.body.title,
+        game: req.body.game,
+        beginsAt: req.body.beginsAt,
+        endsAt: req.body.endsAt,
+        teams: participants
+    }, (err, tournament) => {
+        if (err) {
             console.log(err);
             res.end(err);
-        }
-        else
-        {
-            //refresh the tournament list
+        } else {
+            // res.redirect(`/tournaments/edit/${tournament._id}`);
             res.redirect('/tournaments');
         }
     });
@@ -70,44 +68,41 @@ router.get('/edit/:id', (req, res, next) => {
 
 /* POST Route for processing the Edit page - UPDATE Operation */
 router.post('/edit/:id', (req, res, next) => {
-    let id = req.params.id
-
-    let updatedTournament = Tournament({
-        "_id": id,
-        "title": req.body.title,
-        "game": req.body.game,
-        "beginsAt": new Date(req.body.beginsAt + 1000*60),
-        "endsAt": new Date(req.body.endsAt) + 1
-    });
-
-    Tournament.updateOne({_id: id}, updatedTournament, (err) => {
-        if(err)
-        {
+    const id = req.params.id
+    const teams = req.body.participantNames.split('\n');
+    TournamentController.updateTournament(id, {
+        title: req.body.title,
+        game: req.body.game,
+        beginsAt: req.body.beginsAt,
+        endsAt: req.body.endsAt,
+        teams,
+    }, (err, tournament) => {
+        if (err) {
             console.log(err);
             res.end(err);
-        }
-        else
-        {
-            // refresh the tournament list
+        } else {
             res.redirect('/tournaments');
         }
     });
+
+    // let updatedTournament = Tournament({
+    //     "_id": id,
+    //     "title": req.body.title,
+    //     "game": req.body.game,
+    //     "beginsAt": new Date(req.body.beginsAt + 1000*60),
+    //     "endsAt": new Date(req.body.endsAt) + 1
+    // });
 });
 
 /* GET to perform  Deletion - DELETE Operation */
 router.get('/delete/:id', (req, res, next) => {
     let id = req.params.id;
-
-    Tournament.remove({_id: id}, (err) => {
-        if(err)
-        {
+    TournamentController.deleteTournament(id, err => {
+        if (err) {
             console.log(err);
             res.end(err);
-        }
-        else
-        {
-             // refresh the tournament list
-             res.redirect('/tournaments');
+        } else {
+            res.redirect('/tournaments');
         }
     });
 });
