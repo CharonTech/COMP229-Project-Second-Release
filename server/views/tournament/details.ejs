@@ -25,10 +25,10 @@
           <input name="endsAt" type="date" class="form-control" id="endDate" value="<%= moment(tournament.endsAt).format("YYYY-MM-DD") %>">
         </div>
         <fieldset>
-          <legend>Players Info</legend>   
+          <legend>Players Info</legend>
           <div class="form-group">
             <label for="participantNames">Participants</label>
-            <textarea name="participantNames" class="form-control" id="participantNames"><%= tournament.participantNames %></textarea>
+            <textarea name="participantNames" class="form-control" id="participantNames"><%= tournament.teams ? tournament.teams.map(t => t.name).join("\n"): "" %></textarea>
           </div>
         </fieldset>
         <!--
@@ -40,8 +40,8 @@
         </div>
         -->
       <fieldset>
-        <button type ="submit" class="btn btn-primary">Save the Tournament</button>    
-      </fieldset> 
-    
-  </form>  
+        <button type ="submit" class="btn btn-primary">Save the Tournament</button>
+      </fieldset>
+
+  </form>
 </div>
