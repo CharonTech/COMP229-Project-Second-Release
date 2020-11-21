@@ -1,52 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/fa/css/all.min.css" />
-    <link rel="stylesheet" href="/content/app.css" />
-
-    <title><%= title %></title>
+    <%- include('../partials/head.ejs') -%>
   </head>
+ 
   <body>
-  <!-- Navigation-->
-  <% if(title == "Create Tournament" || title == "Tournaments" || title == "Edit Tournament") {%>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav" style="background-color: rgba(0, 0, 0, 0.5);">
-  <%} else {%>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
-  <%}%>
-        <div class="container">
-            <!--Logo Insertion-->
-            <a href="/"><img src="/assets/images/logo.png" class="rounded" alt="Logo" width="100"> </a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/tournaments/create"><button type="button" class="btn btn-info">Create A
-                                Tournament</button></a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/tournaments"><button type="button" class="btn btn-info">Tournaments
-                                List</button></a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger mt-2" href="">Sign-in</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+  
+    <%- include('../partials/main_nav.ejs') -%>
     <%- body %>
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/scripts/app.js"></script>
+    <%- include('../partials/footer.ejs') -%>
+
   </body>
-  <!-- Footer-->
-  <footer class="bg-light py-5">
-      <div class="container">
-          <div class="small text-center text-muted">Copyright © 2020 - CharonTech Incorporated</div>
-      </div>
-  </footer>
 </html>

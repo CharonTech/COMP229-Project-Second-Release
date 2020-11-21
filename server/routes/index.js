@@ -1,22 +1,25 @@
 const router = require("express").Router();
-const moment = require('moment');
-// define the Tournament model
-const Tournament = require("../models/tournament");
+const indexController = require('../controllers/index');
 
-router.get("/", (req, res) => {
 
-  Tournament.find((err, tournaments) => {
-    if (err) {
-      return console.error(err);
-    }
-    else {
-      res.render('tournament/homepage', {
-        title: 'Home Page',
-        tournaments: tournaments,
-        moment: moment
-      });
-    }
-  });
-});
+
+
+/* GET request for Home Page */
+router.get("/", indexController.displayHomePage);
+
+/* GET request for Register Page */
+router.get("/register", indexController.displayRegisterPage);
+
+/* POST request for Register Page */
+router.post('/register', indexController.processRegisterPage);
+
+/* GET request for Login Page */
+router.get("/login", indexController.displayLoginPage);
+
+/* POST request for Login Page */
+router.post('/login', indexController.processLoginPage);
+
+/* Perform logout */
+router.get('/logout', indexController.PerformLogout);
 
 module.exports = router;

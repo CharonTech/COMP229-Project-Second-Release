@@ -1,5 +1,8 @@
 let mongoose = require('mongoose');
 
+let User = require('./user').UserSchema;
+let bracket = require('./bracket')
+
 let tournamentModel = mongoose.Schema({
     title: { type: String, required: true, index: true },
     tournamentType: {

@@ -1,37 +1,31 @@
 const router = require("express").Router();
-const moment = require('moment');
+const tournamentController = require('../controllers/tournament');
 
 // define the Tournament model
 const Tournament = require("../models/tournament");
-const TournamentController = require('../controllers/tournament');
 
-/* GET Tournament List page. READ */
-router.get('/', (req, res, next) => {
-    // find all tournaments in the tournaments collection
-    Tournament.find( (err, tournaments) => {
-      if (err) {
-        return console.error(err);
-      }
-      else {
-        res.render('tournament/list', {
-          title: 'Tournaments',
-          tournaments: tournaments,
-          moment: moment
-        });
-      }
-    });
+// helper function for guard purposes
+function requireAuth(req, res, next)
+{
+    //check if the user is logged in 
+    if(!req.isAuthenticated())
+    {
+        return res.redirect('/login');
+    }
+    next();
+}
 
-  });
+/* GET Tournament List page. READ Operation */
+router.get('/', requireAuth, tournamentController.displayTournaments);
 
-/* Display the Create tournament page */
-router.get("/create", (req, res) => {
-    res.render('tournament/details', {title: "Create Tournament", tournament: "", moment: moment});
-});
+/* GET Tournament List page. */
+router.get("/create", requireAuth, tournamentController.displayCreatePage);
+
 
 /* POST request for the Create page */
 router.post("/create", (req, res) => {
     const participants = req.body.participantNames.split('\n');
-    TournamentController.createTournament({
+    tournamentController.createTournament({
         title: req.body.title,
         game: req.body.game,
         beginsAt: req.body.beginsAt,
@@ -48,29 +42,15 @@ router.post("/create", (req, res) => {
     });
 });
 
-/* GET Route for displaying the Edit page - UPDATE Operation */
-router.get('/edit/:id', (req, res, next) => {
-    let id = req.params.id;
-
-    Tournament.findById(id, (err, tournamentToEdit) => {
-        if(err)
-        {
-            console.log(err);
-            res.end(err);
-        }
-        else
-        {
-            //show the edit view
-            res.render('tournament/details', {title: 'Edit Tournament', tournament: tournamentToEdit, moment: moment})
-        }
-    });
-});
+/* GET Route for displaying the Edit page*/
+router.get('/edit/:id', requireAuth, tournamentController.displayEditPage);
 
 /* POST Route for processing the Edit page - UPDATE Operation */
+
 router.post('/edit/:id', (req, res, next) => {
     const id = req.params.id
     const teams = req.body.participantNames.split('\n');
-    TournamentController.updateTournament(id, {
+    tournamentController.updateTournament(id, {
         title: req.body.title,
         game: req.body.game,
         beginsAt: req.body.beginsAt,
@@ -97,7 +77,7 @@ router.post('/edit/:id', (req, res, next) => {
 /* GET to perform  Deletion - DELETE Operation */
 router.get('/delete/:id', (req, res, next) => {
     let id = req.params.id;
-    TournamentController.deleteTournament(id, err => {
+    tournamentController.deleteTournament(id, err => {
         if (err) {
             console.log(err);
             res.end(err);
@@ -106,5 +86,4 @@ router.get('/delete/:id', (req, res, next) => {
         }
     });
 });
-
 module.exports = router;
