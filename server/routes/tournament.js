@@ -21,9 +21,8 @@ router.get('/', requireAuth, tournamentController.displayTournaments);
 /* GET Tournament List page. */
 router.get("/create", requireAuth, tournamentController.displayCreatePage);
 
-
 /* POST request for the Create page */
-router.post("/create", (req, res) => {
+router.post("/create", requireAuth, (req, res) => {
     const participants = req.body.participantNames.split('\n');
     tournamentController.createTournament({
         title: req.body.title,
