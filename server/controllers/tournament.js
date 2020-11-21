@@ -111,7 +111,7 @@ function getTournamentWithBrackets(id, callback) {
  * @param callback Callback funciton with (error, newInstance) signature
  */
 function createTournament(info, callback) {
-    let { title, game, beginsAt, endsAt, teams } = info;
+    let { title, game, owner, beginsAt, endsAt, teams } = info;
 
     // BEGIN validations
     if (!title) {
@@ -128,7 +128,7 @@ function createTournament(info, callback) {
     }
     // END validation
 
-    let tournament = new Tournament({ title, game, beginsAt, endsAt });
+    let tournament = new Tournament({ title, game, owner, beginsAt, endsAt });
     tournament.teams = teamsArray;
 
     mongoose.startSession()
@@ -170,7 +170,7 @@ function createTournament(info, callback) {
  * @param callback Callback funciton with (error, tournament) signature
  */
 function updateTournament(id, info, callback) {
-    let { title, game, beginsAt, endsAt, teams } = info;
+    let { title, game, owner, beginsAt, endsAt, teams } = info;
 
     // BEGIN validation
     if (!(typeof(id) === 'string' || id instanceof mongoose.Types.ObjectId)) {
@@ -205,6 +205,11 @@ function updateTournament(id, info, callback) {
 
                 if (game !== tournament.game) {
                     tournament.game = game;
+                    isChanged = true;
+                }
+
+                if (!owner.equals(tournament.owner)) {
+                    tournament.owner = owner;
                     isChanged = true;
                 }
 

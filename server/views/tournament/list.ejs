@@ -12,9 +12,9 @@
           
           <br>
           <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover">
+            <table class="table table-bordered table-striped table-hover table-lg">
               <thead>
-              
+                
                 <tr>
                   <th>Title</th>
                   <th class="text-center">Game Name</th>
@@ -23,13 +23,14 @@
                   <% if(typeof firstName == "string" && firstName) {%>
                   <th></th>
                   <th></th>
+                  <th></th>
                   <% } %>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- Template Row -->
                 <% for (let count = 0; count < tournaments.length; count++) { %>
-                
+                <% if(currentUser._id.equals(tournaments[count].owner)) {%>
                 <tr>
                   <td><%= tournaments[count].title %></td>
                   <td class="text-center"><%= tournaments[count].game %></td>
@@ -45,8 +46,11 @@
                   <td class="text-center">
                     <a href="/tournaments/delete/<%= tournaments[count]._id %>" class="btn btn-danger btn-sm">Delete</a>
                   </td>
+                  <td class="text-center">
+                    <a href="#" class="btn btn-success btn-sm">Run</a>
+                  </td>
                 </tr>
-
+                  <% } %>
                   <% } %>
                 <% } %>
               </tbody>

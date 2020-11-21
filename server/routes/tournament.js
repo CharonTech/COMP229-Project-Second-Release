@@ -27,6 +27,7 @@ router.post("/create", requireAuth, (req, res) => {
     tournamentController.createTournament({
         title: req.body.title,
         game: req.body.game,
+        owner: req.user,
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
         teams: participants
@@ -52,6 +53,7 @@ router.post('/edit/:id', (req, res, next) => {
     tournamentController.updateTournament(id, {
         title: req.body.title,
         game: req.body.game,
+        owner: req.user,
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
         teams: teams,

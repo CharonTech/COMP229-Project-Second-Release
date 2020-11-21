@@ -9,7 +9,7 @@ let tournamentModel = mongoose.Schema({
         type: String,
         default: 'Single-Elimination'
     },
-    /*owner: { type: mongoose.Types.ObjectId, ref: 'User' },*/
+    owner: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
     game: String,
     beginsAt: Date,
     endsAt: Date,
