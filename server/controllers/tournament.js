@@ -8,15 +8,17 @@ module.exports.displayTournaments = (req, res, next) => {
     // find all tournaments in the tournaments collection
     console.log(req.user);
     Tournament.find((err, tournaments) => {
-        if (err) {
+        if (err)
+        {
             return console.error(err);
         }
-        else {
+        else
+        {
             res.render('tournament/list', {
                 title: 'Tournaments',
                 tournaments: tournaments,
                 moment: moment,
-                lastName: req.user ? req.user.lastName : "",
+                firstName: req.user ? req.user.firstName : "",
                 currentUser: req.user
             });
         }
@@ -26,11 +28,12 @@ module.exports.displayTournaments = (req, res, next) => {
 // Display Create Tournament Page
 module.exports.displayCreatePage = (req, res) => {
     res.render('tournament/details',
-        {
-            title: "Create Tournament",
-            tournament: "",
-            moment: moment
-        });
+    {
+        title: "Create Tournament",
+        tournament: "",
+        firstName: req.user ? req.user.firstName : "",
+        moment: moment
+    });
 };
 
 // Process Create Tournament Page
@@ -60,13 +63,21 @@ module.exports.displayEditPage = (req, res, next) => {
     let id = req.params.id;
 
     Tournament.findById(id, (err, tournamentToEdit) => {
-        if (err) {
+        if (err)
+        {
             console.log(err);
             res.end(err);
         }
-        else {
+        else
+        {
             //show the edit view
-            res.render('tournament/details', { title: 'Edit Tournament', tournament: tournamentToEdit, moment: moment })
+            res.render('tournament/details',
+            {
+                title: 'Edit Tournament',
+                tournament: tournamentToEdit,
+                moment: moment,
+                firstName: req.user ? req.user.firstName : "",
+            });
         }
     });
 };

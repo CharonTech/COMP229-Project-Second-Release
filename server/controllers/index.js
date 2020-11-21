@@ -10,14 +10,17 @@ const User = require('../models/user').userModel;
 module.exports.displayHomePage = (req, res) => {
 
     Tournament.find((err, tournaments) => {
-        if (err) {
+        if (err)
+        {
             return console.error(err);
         }
-        else {
+        else
+        {
             res.render('tournament/homepage', {
                 title: 'Home Page',
                 tournaments: tournaments,
-                moment: moment
+                moment: moment,
+                firstName: req.user ? req.user.firstName : "",
             });
         }
     });
@@ -25,17 +28,18 @@ module.exports.displayHomePage = (req, res) => {
 
 // Display register page
 module.exports.displayRegisterPage = (req, res) => {
-    if (!req.user) {
+    if (!req.user)
+    {
         res.render('auth/register',
             {
                 layout: 'layouts/authLayout',
                 title: "Register",
                 messages: req.flash("registerMessage"),
-                heading: "Registration",
-                lastName: req.user ? req.user.lastName : ''
+                heading: "Registration"
             });
     }
-    else {
+    else
+    {
         return res.redirect('/');
     }
   
@@ -63,7 +67,7 @@ module.exports.processRegisterPage = (req, res) => {
                     layout: "layouts/authLayout",
                     title: "Register",
                     messages: req.flash("registerMessage"),
-                    lastName: req.user ? req.user.lastName : '',
+                    firstName: req.user ? req.user.firstName : '',
                     heading: "Registration"
                 });
         }
@@ -80,16 +84,18 @@ module.exports.processRegisterPage = (req, res) => {
 
 // Display Login Page
 module.exports.displayLoginPage = (req, res) => {
-    if (!req.user) {
+    if (!req.user)
+    {
         res.render('auth/login',
-            {
-                layout: "layouts/authLayout",
-                title: "Login",
-                messages: req.flash("loginMessage"),
-                heading: "User Login"
-            });
+        {
+            layout: "layouts/authLayout",
+            title: "Login",
+            messages: req.flash("loginMessage"),
+            heading: "User Login"
+        });
     }
-    else {
+    else
+    {
         return res.redirect('/');
     }
 };

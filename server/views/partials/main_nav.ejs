@@ -16,7 +16,13 @@
                                 Tournament</button></a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/tournaments"><button type="button" class="btn btn-info">Tournaments
                                 List</button></a></li>
+                    
+                    <% if(typeof firstName == "string" && firstName) {%>
+                    <li class="nav-text">Welcome, <%= firstName %></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger mt-2" href="/logout">Sign-out</a></li>
+                    <% } else { %>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger mt-2" href="/login">Sign-in</a></li>
+                    <% } %>
                 </ul>
             </div>
         </div>

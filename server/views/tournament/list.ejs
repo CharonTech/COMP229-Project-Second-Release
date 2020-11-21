@@ -6,7 +6,7 @@
           <h3>All Tournaments</h3>
 
           <!-- Add button -->
-          <% if(typeof lastName == "string" && lastName) {%>
+          <% if(typeof firstName == "string" && firstName) {%>
           <a href="/tournaments/create" class="btn btn-primary"><i class="fa fa-plus"></i> Add a tournament</a><br>
           <% } %>
           
@@ -20,7 +20,7 @@
                   <th class="text-center">Game Name</th>
                   <th class="text-center">Start Date</th>
                   <th class="text-center">End date</th>
-                  <% if(typeof lastName == "string" && lastName) {%>
+                  <% if(typeof firstName == "string" && firstName) {%>
                   <th></th>
                   <th></th>
                   <% } %>
@@ -29,14 +29,13 @@
                 <tbody>
                 <!-- Template Row -->
                 <% for (let count = 0; count < tournaments.length; count++) { %>
-                <% console.log(tournaments[count].owner.username === currentUser.username && tournaments[count].owner.password === currentUser.password) %>
-                <% if(tournaments[count].owner.username === currentUser.username && tournaments[count].owner.password === currentUser.password) {%>
+                
                 <tr>
                   <td><%= tournaments[count].title %></td>
                   <td class="text-center"><%= tournaments[count].game %></td>
                   <td class="text-center"><%=  moment(tournaments[count].beginsAt).format("MMM DD, YYYY") %></td>
                   <td class="text-center"><%= moment(tournaments[count].endsAt).format("MMM DD, YYYY") %></td>
-                  <% if(typeof lastName == "string" && lastName) {%>
+                  <% if(typeof firstName == "string" && firstName) {%>
                   <!-- Edit button -->
                   <td class="text-center">
                     <a href="/tournaments/edit/<%= tournaments[count]._id %>" class="btn btn-primary btn-sm">Edit</a>
@@ -47,7 +46,7 @@
                     <a href="/tournaments/delete/<%= tournaments[count]._id %>" class="btn btn-danger btn-sm">Delete</a>
                   </td>
                 </tr>
-                  <% } %>
+
                   <% } %>
                 <% } %>
               </tbody>
