@@ -6,14 +6,14 @@ let tournamentModel = mongoose.Schema({
         type: String,
         default: 'Single-Elimination'
     },
-    /* owner?: user.userModel, */
+    /*owner: { type: mongoose.Types.ObjectId, ref: 'User' },*/
     game: String,
     beginsAt: Date,
     endsAt: Date,
     teams: [{
         name: { type: String, required: true }
     }], // must be more than 1
-    finalBracket: { type: mongoose.Types.ObjectId, ref: 'Bracket' }
+    finalBracket: { type: mongoose.Types.ObjectId , ref: 'Bracket', required: false }
     /* URL?: String, */
     /* brackets: [bracket.bracketModel] */
 });

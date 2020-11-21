@@ -118,7 +118,7 @@ function updateTournament(id, info, callback) {
         return;
     }
     const tournamentId = typeof(id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
-
+    
     let teamsArray;
     try {
         teamsArray = normalizeTeamsArray(teams);
@@ -157,7 +157,6 @@ function updateTournament(id, info, callback) {
                     tournament.endsAt = endsAt;
                     isChanged = true;
                 }
-
                 if (teamsArray.length !== tournament.teams.length) {
                     // rebuild the brackets if the length is changed
                     tournament.teams = teamsArray;

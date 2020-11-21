@@ -28,7 +28,7 @@
           <legend>Players Info</legend>
           <div class="form-group">
             <label for="participantNames">Participants</label>
-            <textarea name="participantNames" class="form-control" id="participantNames"><%= tournament.teams.map(t => t.name).join("\n") %></textarea>
+            <textarea name="participantNames" class="form-control" id="participantNames"><%= tournament.teams ? tournament.teams.map(t => t.name).join("\n"): "" %></textarea>
           </div>
         </fieldset>
         <!--

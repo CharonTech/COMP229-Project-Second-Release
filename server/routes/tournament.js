@@ -75,7 +75,7 @@ router.post('/edit/:id', (req, res, next) => {
         game: req.body.game,
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
-        teams,
+        teams: teams,
     }, (err, tournament) => {
         if (err) {
             console.log(err);
