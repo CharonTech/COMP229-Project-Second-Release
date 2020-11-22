@@ -38,16 +38,13 @@ function swapTeamsOfSingleBracket(id, callback) {
                 await bracket.save({ session });
             } catch (err) {
                 await session.abortTransaction();
-                callback(err);
-                return session;
+                session.endSession();
+                throw err;
             }
 
             await session.commitTransaction();
-            callback(undefined);
-            return session;
-        })
-        .then(session => {
             session.endSession();
+            callback(undefined);
         })
         .catch(callback);
 }
@@ -106,21 +103,164 @@ function swapTeamsBetweenTwoBrackets(id1, id2, swapMode, callback) {
                 await bracket2.save({ session });
             } catch (err) {
                 await session.abortTransaction();
-                callback(err);
-                return session;
+                session.endSession();
+                throw err;
             }
 
             await session.commitTransaction();
-            callback(undefined);
-            return session;
-        })
-        .then(session => {
             session.endSession();
+            callback(undefined);
+        })
+        .catch(callback);
+}
+
+/**
+ * Set scores for the given bracket
+ *
+ * @param id ID of the bracket
+ * @param scores Object with following optional fields (can have both)
+ *               - score1 (integer): new score for team1
+ *               - score2 (integer): new score for team2
+ * @param callback Callback function with (error) signature
+ */
+function setScoresOfBracket(id, scores, callback) {
+    const { score1, score2 } = scores;
+
+    // BEGIN validation
+    if (!(typeof(id) === 'string' || id instanceof mongoose.Types.ObjectId)) {
+        callback(new Error("The id argument must be a string or an ObjectId"));
+        return;
+    }
+    const bracketId = typeof(id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
+
+    if (typeof(score1) !== 'number' && typeof(score2) !== 'number') {
+        callback(new Error("Neither score1 and score2 are specified as numbers for modification"));
+        return;
+    }
+    // END validation
+
+    Bracket
+        .findById(bracketId) // get the bracket from the database
+        .exec()
+        .then(async bracket => {
+            if (!bracket) { // error if not found
+                throw new Error(`Failed to find bracket with id ${bracketId}`);
+            }
+
+            // set score1 if given
+            if (typeof(score1) === 'number') {
+                bracket.score1 = score1;
+            }
+
+            // set score1 if given
+            if (typeof(score2) === 'number') {
+                bracket.score2 = score2;
+            }
+
+            // save the changes
+            await bracket.save();
+        })
+        .catch(callback);
+}
+
+/**
+ * Set the bracket finished and determine the winner
+ *
+ * This function also propagates changes to the parent bracket if there is one.
+ *
+ * @param id ID of the bracket
+ * @param callback Callback function with (error, isFirstWon, parentBracket) signature
+ *                 If `isFirstWon` is undefined, the scores are equal. (bool | undefined)
+ *                 If `parentBracket` is undefined, there was no parent bracket to modify. (Bracket | undefined)
+ */
+function setWinnerOfBracket(id, callback) {
+    // BEGIN validation
+    if (!(typeof(id) === 'string' || id instanceof mongoose.Types.ObjectId)) {
+        callback(new Error("The id argument must be a string or an ObjectId"));
+        return;
+    }
+    const bracketId = typeof(id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
+    // END validation
+
+    mongoose.startSession()
+        .then(async session => {
+            session.startTransaction();
+
+            let isFirstWon = undefined;
+            let parentBracket = undefined;
+
+            // get the bracket with the given id
+            const bracket = await Bracket.findById(bracketId).session(session).exec();
+            if (!bracket) { // the bracket is not found
+                await session.abortTransaction();
+                session.endSession();
+                throw new Error(`Failed to find bracket with id ${bracketId}`);
+            }
+
+            // see if there is a win/lose
+            if (bracket.score1 > bracket.score2) {
+                isFirstWon = true;
+            } else if (bracket.score1 < bracket.score2) {
+                isFirstWon = false;
+            }
+
+            // if the scores are the same, abort transaction and pass in undefined to all arguments for the callback
+            if (isFirstWon === undefined) {
+                await session.abortTransaction();
+                session.endSession();
+                callback(undefined, undefined, undefined);
+                return;
+            }
+
+            // if there is a win/lose, save the info
+            bracket.isFirstWon = isFirstWon;
+            await bracket.save({ session });
+
+            // assign the winning team to the parent bracket
+            if (bracket.parent) { // the bracket has a parent bracket
+                // find the parent bracket
+                const parent = await Bracket.findById(bracket.parent).session(session).exec();
+
+                if (parent) {
+                    // the parent is found
+                    if (parent.children.length != 2) {
+                        // the children field of the parent bracket is not assigned
+                        // this means the data integrity is broken
+                        console.error(
+                            `Bracket ${parent._id} does not have children while being parent of bracket ${bracketId}`);
+                    } else {
+                        // the parent bracket has children field assigned
+                        parentBracket = parent; // set the modified bracket to pass into the callback
+
+                        if (parent.children[0].equals(bracketId)) {
+                            // the winning team is from the first child
+                            parent.team1 = isFirstWon ? bracket.team1 : bracket.team2;
+                        } else {
+                            // the winning team is from the second child
+                            parent.team2 = isFirstWon ? bracket.team1 : bracket.team2;
+                        }
+
+                        // save the change of the parent bracket
+                        await parent.save({ session });
+                    }
+                } else {
+                    // the parent is not found; this means the data integrity is broken
+                    console.error(
+                        `Bracket ${bracketId} has a parent with id ${bracket.parent}, but the parent is not found`);
+                }
+            }
+
+            // commit all changes to the transaction and end the session
+            await session.commitTransaction();
+            session.endSession();
+            callback(undefined, isFirstWon, parentBracket);
         })
         .catch(callback);
 }
 
 module.exports = {
     swapTeamsOfSingleBracket,
-    swapTeamsBetweenTwoBrackets
+    swapTeamsBetweenTwoBrackets,
+    setScoresOfBracket,
+    setWinnerOfBracket
 };
