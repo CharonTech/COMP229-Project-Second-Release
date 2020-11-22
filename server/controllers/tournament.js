@@ -78,22 +78,31 @@ function getTournamentWithBrackets(id, callback) {
     // END validation
 
     Tournament
-        .findById(tournamentId)
+        .findById(tournamentId) // get the tournament from db
         .exec()
         .then(async tournament => {
+            // fetch all brackets associated with the given tournament
             const brackets = await Bracket.find({ tournament: tournamentId }).exec();
 
-            for (const bracket of brackets) {
-                if (bracket.children.length == 2) {
+            for (const bracket of brackets) { // for each of the fetched brackets
+                if (bracket.children.length == 2) { // if the bracket has children
+                    // replace children field with ids with actual bracket object
                     bracket.children[0] = brackets.find(b => b._id == bracket.children[0]);
                     bracket.children[1] = brackets.find(b => b._id == bracket.children[1]);
+
+                    // replace parent fields of the children brackets with this bracket object
                     bracket.children[0].parent = bracket;
                     bracket.children[1].parent = bracket;
                 }
             }
+
+            // replace finalBracket field of the tournament with the actual bracket object
             tournament.finalBracket = brackets.find(b => b._id == tournament.finalBracket);
+
+            // set the top-level bracket's parent field as undefined
             tournament.finalBracket.parent = undefined;
 
+            // pass in the tournament object with all bracket objects attached into the callback
             callback(undefined, tournament);
         })
         .catch(callback);
@@ -178,7 +187,7 @@ function updateTournament(id, info, callback) {
         return;
     }
     const tournamentId = typeof(id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
-    
+
     let teamsArray;
     try {
         teamsArray = normalizeTeamsArray(teams);
@@ -348,7 +357,7 @@ function deleteTournament(id, callback) {
     mongoose.startSession()
         .then(async session => {
             await Tournament.findByIdAndDelete(tournamentId).session(session).exec();
-            await Bracket.deleteMany({ _id: tournamentId }).session(session).exec();
+            await Bracket.deleteMany({ tournament: tournamentId }).session(session).exec();
             session.endSession();
             callback(undefined);
         })
