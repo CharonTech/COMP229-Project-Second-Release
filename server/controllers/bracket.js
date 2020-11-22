@@ -38,16 +38,13 @@ function swapTeamsOfSingleBracket(id, callback) {
                 await bracket.save({ session });
             } catch (err) {
                 await session.abortTransaction();
-                callback(err);
-                return session;
+                session.endSession();
+                throw err;
             }
 
             await session.commitTransaction();
-            callback(undefined);
-            return session;
-        })
-        .then(session => {
             session.endSession();
+            callback(undefined);
         })
         .catch(callback);
 }
@@ -106,16 +103,13 @@ function swapTeamsBetweenTwoBrackets(id1, id2, swapMode, callback) {
                 await bracket2.save({ session });
             } catch (err) {
                 await session.abortTransaction();
-                callback(err);
-                return session;
+                session.endSession();
+                throw err;
             }
 
             await session.commitTransaction();
-            callback(undefined);
-            return session;
-        })
-        .then(session => {
             session.endSession();
+            callback(undefined);
         })
         .catch(callback);
 }
@@ -238,7 +232,7 @@ function setWinnerOfBracket(id, callback) {
                         // the parent bracket has children field assigned
                         parentBracket = parent; // set the modified bracket to pass into the callback
 
-                        if (parent.children[0].toString() === bracketId.toString()) {
+                        if (parent.children[0].equals(bracketId)) {
                             // the winning team is from the first child
                             parent.team1 = isFirstWon ? bracket.team1 : bracket.team2;
                         } else {
