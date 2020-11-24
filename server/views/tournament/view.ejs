@@ -1,0 +1,73 @@
+<% let finalBracket = tournament.finalBracket; %>
+<div class="container-fluid margined" style="overflow: auto;">
+    <br>
+    <section class="float-right" style="max-width: 15%; min-width: 15%;  margin-top: 30%; margin-bottom: 2rem; display: inline-block;" id="winner">
+        <span class="border border-info text-left lead bg-white" style="display:inline-block; min-width: 80%; margin-bottom: 2rem;">
+            <span class="bg-info text-left text-white" style="padding-left: 7px; padding-right: 7px"><%= " " %></span>
+            <span class="bg-white text-right" 
+                style="padding-left: 7px; padding-right: 7px;">----------</span>
+        </span>
+    </section>
+    <section class="float-right" style="max-width: 15%; margin-top: 15%; margin-bottom: 2rem; margin-right: 1.5rem; display: inline-block; padding: 1rem;" id="bracketL0FB">
+        <span class="border border-info text-left lead bg-white" style="display:inline-block; min-width: 100%; margin-top: 32%; margin-bottom: 7rem;">
+            <span class="bg-info text-left text-white" style="padding-left: 7px; padding-right: 7px"><%= finalBracket.team1 == -1 ? " ": finalBracket.team1 %></span>
+            <span class="bg-white text-right" 
+                style="padding-left: 7px; padding-right: 7px;"><%= finalBracket.team1 == -1 ? "----------" : tournament.teams[0].name %></span>
+        </span>
+        <span class="border border-info text-left lead bg-white"
+            style="display:inline-block; min-width: 100%; margin-top: 7rem; margin-bottom: 1rem;">
+            <span class="bg-info text-left text-white" style="padding-left: 7px; padding-right: 7px"><%= finalBracket.team2 == -1 ? " ": finalBracket.team2 %></span>
+            <span class="bg-white text-right"
+                style="padding-left: 7px; padding-right: 7px;"><%= finalBracket.team2 == -1 ? "----------" : tournament.teams[1].name %></span>
+        </span>
+    </section>
+    <%  let currentBracket = finalBracket;
+        let j = 0;
+        function displayBracketAll(bracket)
+        {
+            if(bracket.children.length != 0) 
+            {
+                if(j == 0) {%>
+                <div class="container float-right" style="max-width: 20%; margin-top: 15%; margin-bottom: 2rem; margin-right: 1.5rem; display: inline-block; padding: 1rem;">
+                <%} else if(j == 2) {%>
+                <div class="container float-right" style="max-width: 15%; margin-top: 10%; margin-bottom: 1rem; margin-right: 1.5rem; display: inline-block; padding: 1rem;">
+                <%}%>
+                <%for(let i = 0; i < bracket.children.length; ++i)
+                {
+                    if (j == 0 || j == 1) {%>
+                    <section class="float-right" style="max-width: 100%; margin-bottom: 5rem; display: inline-block; padding: 1rem;" id="bracket<%= j++ %>">
+                    <span class="border border-info text-left bg-white" style="display:inline-block; min-width: 100%; margin-bottom: 2rem;">
+                    <%} else {%>
+                    <section class="float-right" style="max-width: 100%; display: inline-block; padding: 1rem;" id="bracket<%= j++ %>">
+                    <span class="border border-info text-left bg-white" style="display:inline-block; min-width: 100%; margin-bottom: 0.5rem;">
+                    <%}%>
+                        
+                            <span class="bg-info text-left text-white" style="padding-left: 7px; padding-right: 7px"><%= bracket.children[i].team1 == -1 ? " ": bracket.children[i].team1 + 1 %></span>
+                            <span class="bg-white text-right" 
+                                style="padding-left: 7px; font-size: 7pt; padding-right: 7px;"><%= bracket.children[i].team1 == -1 ? "----------" : tournament.teams[bracket.children[i].team1].name %></span>
+                        </span>
+                        <span class="border border-info text-left bg-white"
+                            style="display:inline-block; min-width: 100%; margin-top: 2rem; margin-bottom: 1rem;">
+                            <span class="bg-info text-left text-white" style="padding-left: 7px; padding-right: 7px"><%= bracket.children[i].team2 == -1 ? " ": bracket.children[i].team2 + 1 %></span>
+                            <span class="bg-white text-right"
+                                style="padding-left: 7px; font-size: 7pt; padding-right: 7px;"><%= bracket.children[i].team2 == -1 ? "----------" : tournament.teams[bracket.children[i].team2].name %></span>
+                        </span>
+                    </section>
+                <%}
+                if(j == 2){%>
+                </div>
+                <%}
+                else if(j == 6) {%>
+                </div>
+                <%}
+
+                displayBracketAll(bracket.children[0]);
+                displayBracketAll(bracket.children[1]);
+            }
+            else
+            {
+                return;
+            }
+        }
+        displayBracketAll(currentBracket);%>
+</div>

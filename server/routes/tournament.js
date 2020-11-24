@@ -1,8 +1,6 @@
 const router = require("express").Router();
 const tournamentController = require('../controllers/tournament');
-
-// define the Tournament model
-const Tournament = require("../models/tournament");
+const Tournament = require('../models/tournament');
 
 // helper function for guard purposes
 function requireAuth(req, res, next)
@@ -88,3 +86,26 @@ router.get('/delete/:id', (req, res, next) => {
     });
 });
 module.exports = router;
+
+router.get('/view/:id', (req, res, next) => {
+    let id = req.params.id;
+    tournamentController.getTournamentWithBrackets(id, (err, tournament) => {
+        if (err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            res.render('tournament/view',
+            {
+                title: "Tournament View",
+                tournament: tournament,
+                Tournament: Tournament,
+                firstName: req.user ? req.user.firstName : "",
+                currentUser: req.user
+            });
+        }
+    });
+    
+});

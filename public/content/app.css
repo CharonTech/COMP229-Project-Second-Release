@@ -221,3 +221,6 @@ header.masthead h1 {
   padding: 20px;
   border-radius: 10px;
 }
+section[id^="bracket"]:hover {
+  background-color: rgba(11, 221, 227, 0.3);
+}

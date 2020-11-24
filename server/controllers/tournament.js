@@ -7,8 +7,6 @@ const Bracket = require('../models/bracket');
 
 // Display Tournament List Page
 let displayTournaments = (req, res, next) => {
-    // find all tournaments in the tournaments collection
-    console.log(req.user);
     Tournament.find((err, tournaments) => {
         if (err)
         {
@@ -74,7 +72,8 @@ function getTournamentWithBrackets(id, callback) {
         callback(new Error("The tournament argument must be a string or an ObjectId"));
         return;
     }
-    const tournamentId = typeof(id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
+    const tournamentId = typeof (id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
+    
     // END validation
 
     Tournament
@@ -83,22 +82,21 @@ function getTournamentWithBrackets(id, callback) {
         .then(async tournament => {
             // fetch all brackets associated with the given tournament
             const brackets = await Bracket.find({ tournament: tournamentId }).exec();
-
             for (const bracket of brackets) { // for each of the fetched brackets
                 if (bracket.children.length == 2) { // if the bracket has children
                     // replace children field with ids with actual bracket object
-                    bracket.children[0] = brackets.find(b => b._id == bracket.children[0]);
-                    bracket.children[1] = brackets.find(b => b._id == bracket.children[1]);
-
+                    
+                    bracket.children[0] = brackets.find(b => b._id.equals(bracket.children[0]));
+                    bracket.children[1] = brackets.find(b => b._id.equals(bracket.children[1]));
+                    
                     // replace parent fields of the children brackets with this bracket object
                     bracket.children[0].parent = bracket;
                     bracket.children[1].parent = bracket;
                 }
             }
 
-            // replace finalBracket field of the tournament with the actual bracket object
-            tournament.finalBracket = brackets.find(b => b._id == tournament.finalBracket);
-
+            // replace finalBracket field of the tournament with the actual bracket object            
+            tournament.finalBracket = brackets.find(b => b._id.equals(tournament.finalBracket));
             // set the top-level bracket's parent field as undefined
             tournament.finalBracket.parent = undefined;
 
@@ -151,8 +149,9 @@ function createTournament(info, callback) {
                 tournament = await tournament.save({ session });
 
                 // create brackets and assign the top-level bracket to the tournament
-                const finalBracket = await createBrackets(session, tournament._id, teamsArray.length);
+                const { finalBracket, levelNum } = await createBrackets(session, tournament._id, teamsArray.length);
                 tournament.finalBracket = finalBracket;
+                tournament.levelNum = levelNum;
                 await tournament.save({ session });
             } catch (err) {
                 // abort current transaction
@@ -254,7 +253,7 @@ function updateTournament(id, info, callback) {
                     await Bracket.deleteMany({ tournament: tournamentId }).session(session).exec();
 
                     // create new brackets
-                    tournamentId.finalBracket = await createBrackets(session, tournamentId, teamsArray.length);
+                    tournamentId.finalBracket, tournament.levelNum = await createBrackets(session, tournamentId, teamsArray.length);
 
                     isChanged = true;
                 } else {
@@ -528,5 +527,5 @@ async function createBrackets(session, tournamentId, teams) {
         }
     }
 
-    return brackets[0]._id;
+    return brackets[0]._id, lastLevel;
 }

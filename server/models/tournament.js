@@ -16,7 +16,8 @@ let tournamentModel = mongoose.Schema({
     teams: [{
         name: { type: String, required: true }
     }], // must be more than 1
-    finalBracket: { type: mongoose.Types.ObjectId , ref: 'Bracket', required: false }
+    finalBracket: { type: mongoose.Types.ObjectId, ref: 'Bracket', required: false },
+    levelNum: Number
     /* URL?: String, */
     /* brackets: [bracket.bracketModel] */
 });
