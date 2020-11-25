@@ -1,17 +1,7 @@
-const Tournament = require("../../server/models/tournament");
-
 (function(){
     const authForm = document.querySelector('#authForm');
     const mainNav = document.querySelector('#mainNav');
     
-    function getParentTournament(id)
-    {
-        Tournament.findById(id).exec().then((tournament) => {
-            console.log('This is the parent tournament ->' + tournament);
-            return tournament;
-        });
-    }
-
     if (document.title == "Register" || document.title == "Login")
     {
         window.addEventListener('scroll', () => {
@@ -22,7 +12,7 @@ const Tournament = require("../../server/models/tournament");
         {
             mainNav.style.backgroundColor = ``;
         }
-    });
+        });
     }
     
     
