@@ -16,4 +16,26 @@
     }
     
     
-})();  
+})();
+
+// ask a user to confirm deletion or cancel it
+(function()
+{
+    function Start()
+    {
+        let deleteButtons = document.querySelectorAll('.btn-danger');
+        
+        for(button of deleteButtons)
+        {
+            button.addEventListener('click', (event)=>{
+                if(!confirm("Are you sure?")) 
+                {
+                    event.preventDefault();
+                    window.location.assign('/tournaments');
+                }
+            });
+        }
+    }
+    
+    window.addEventListener("load", Start);
+})();
