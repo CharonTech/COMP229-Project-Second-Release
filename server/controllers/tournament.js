@@ -94,7 +94,6 @@ function getTournamentWithBrackets(id, callback) {
                     bracket.children[1].parent = bracket;
                 }
             }
-
             // replace finalBracket field of the tournament with the actual bracket object            
             tournament.finalBracket = brackets.find(b => b._id.equals(tournament.finalBracket));
             // set the top-level bracket's parent field as undefined
@@ -149,7 +148,7 @@ function createTournament(info, callback) {
                 tournament = await tournament.save({ session });
 
                 // create brackets and assign the top-level bracket to the tournament
-                const { finalBracket, levelNum } = await createBrackets(session, tournament._id, teamsArray.length);
+                const [finalBracket, levelNum] = await createBrackets(session, tournament._id, teamsArray.length);
                 tournament.finalBracket = finalBracket;
                 tournament.levelNum = levelNum;
                 await tournament.save({ session });
@@ -471,7 +470,6 @@ async function createBrackets(session, tournamentId, teams) {
 
     // save the final bracket to get the id
     brackets = await Bracket.create(brackets, { session });
-
     // number of levels to add on top of the final bracket
     const lastLevel = Math.ceil(Math.log2(Math.ceil(teams / 2.0)));
 
@@ -527,5 +525,5 @@ async function createBrackets(session, tournamentId, teams) {
         }
     }
 
-    return brackets[0]._id, lastLevel;
+    return [ brackets[0]._id, lastLevel ];
 }
