@@ -1,0 +1,12 @@
+<!-- Single box that represents each team and its score -->
+<span class="border border-info text-left lead bg-white">
+  <span class="bg-info text-left text-white px-2" >
+    <%= index < 0 ? " " : index + 1 %>
+  </span>
+  <span class="bg-white text-right px-2">
+    <%= team ? team.name : "---------" %>
+  </span>
+  <span class="bg-info text-right text-white float-right px-2">
+    <%= score %>
+  </span>
+</span>

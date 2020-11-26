@@ -1,4 +1,22 @@
 <% let finalBracket = tournament.finalBracket; %>
+<style>
+    .tournament-container {
+        overflow-x: auto;
+    }
+    .team-box {
+        width: 15rem;
+    }
+    .padding-sides-7px {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+</style>
+
+<!-- Top-level container for the brackets -->
+<div class="container-fluid margined tournament-container">
+<%- include('partials/bracket', { bracket: finalBracket, teams: tournament.teams }) %>
+</div>
+<!--
 <div class="container-fluid margined" style="overflow: auto;">
     <br>
     <% if(finalBracket.children.length == 0 || finalBracket.children[0].children.length == 0) {%>
@@ -97,3 +115,4 @@
         }
         displayBracketAll(currentBracket);%>
 </div>
+-->
