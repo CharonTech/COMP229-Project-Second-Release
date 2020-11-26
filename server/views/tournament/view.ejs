@@ -5,7 +5,10 @@
   }
   .team-box {
     width: 15rem;
-}
+  }
+  #bracketFinishForm {
+    display: none;
+  }
 </style>
 
 <!-- Top-level container for the brackets -->
@@ -35,10 +38,14 @@
             <input type="number" class="form-control" id="team2-score" name="team2-score">
           </div>
         </form>
+        <form method="POST" action="/tournaments/bracket/finish/<%= tournament.id %>" id="bracketFinishForm">
+          <input type="hidden" id="bracket-finish-id" name="bracket-finish-id">
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="bracketForm">Save Changes</button>
+        <button type="submit" class="btn btn-primary" form="bracketForm">Save Scores</button>
+        <button type="submit" class="btn btn-primary" form="bracketFinishForm">Decide Winner</button>
       </div>
     </div>
   </div>

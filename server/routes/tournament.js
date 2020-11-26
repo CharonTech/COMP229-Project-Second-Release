@@ -130,3 +130,15 @@ router.post('/view/:id', (req, res, next) => {
         }
     );
 });
+
+router.post('/bracket/finish/:id', (req, res, next) => {
+    let tournamentId = req.params.id;
+    bracketController.setWinnerOfBracket(req.body['bracket-finish-id'], (err, isFirstWon, parentBracket) => {
+        if (err) {
+            console.error(err);
+            res.end(err);
+        } else {
+            res.redirect(`/tournaments/view/${tournamentId}`);
+        }
+    });
+});
