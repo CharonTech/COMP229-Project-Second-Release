@@ -94,6 +94,7 @@ function getTournamentWithBrackets(id, callback) {
                     bracket.children[1].parent = bracket;
                 }
             }
+            console.log("tournament -> " + tournament);
             // replace finalBracket field of the tournament with the actual bracket object
             tournament.finalBracket = brackets.find(b => b._id.equals(tournament.finalBracket));
             // set the top-level bracket's parent field as undefined
@@ -252,8 +253,8 @@ function updateTournament(id, info, callback) {
                     await Bracket.deleteMany({ tournament: tournamentId }).session(session).exec();
 
                     // create new brackets
-                    tournamentId.finalBracket, tournament.levelNum = await createBrackets(session, tournamentId, teamsArray.length);
-
+                    tournamentId.finalBracket = await createBrackets(session, tournamentId, teamsArray.length);
+                    console.log("finalBracket id ->" + tournamentId.finalBracket);
                     isChanged = true;
                 } else {
                     // apply any changes to team names
@@ -343,7 +344,6 @@ function rebuildTournamentBrackets(id, newTeams, callback) {
                 // delete previously existing brackets and create new ones
                 await Bracket.deleteMany({ tournament: tournamentId }).session(session).exec();
                 tournamentId.finalBracket = await createBrackets(session, tournamentId, teamsArray.length);
-
                 tournament.teams = teamsArray;
                 await tournament.save({ session });
             } catch (err) {
@@ -465,7 +465,7 @@ async function createBrackets(session, tournamentId, teams) {
         brackets[0].team1 = 0;
         brackets[0].team2 = 1;
         brackets = await Bracket.create(brackets, { session });
-        return [ brackets[0]._id, 0 ];
+        return brackets[0]._id;
     }
 
     // save the final bracket to get the id
@@ -524,6 +524,6 @@ async function createBrackets(session, tournamentId, teams) {
             await brackets[thisIndex + 1].save({ session });
         }
     }
-
-    return [ brackets[0]._id, lastLevel ];
+    console.log("Created bracket id -> " + brackets[0]._id);
+    return brackets[0]._id;
 }

@@ -17,7 +17,7 @@
 <!-- Top-level container for the brackets -->
 <div class="container">
   <div method="POST" class="margined tournament-container">
-    <%- include('partials/bracket', { bracket: finalBracket, teams: tournament.teams }) %>
+    <%- include('partials/bracket', { currentUser: currentUser, owner: tournament.owner, bracket: finalBracket, teams: tournament.teams }) %>
   </div>
 </div>
 

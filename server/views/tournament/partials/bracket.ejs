@@ -6,16 +6,19 @@
   <div class="d-flex flex-column justify-content-center team-box">
     <%- include('teambox', {
       bracket,
-      teams,
+      currentUser: currentUser,
+      owner: owner,
       index: bracket.team1,
       team: bracket.team1 < 0 ? undefined : teams[bracket.team1],
       opponent: bracket.team2 < 0 ? undefined : teams[bracket.team2],
       score: bracket.score1,
-      winner: bracket.isFirstWon
+      winner: bracket.isFirstWon      
     }) %>
     <%- include('teambox', {
+      tournament,
       bracket,
-      teams,
+      currentUser: currentUser,
+      owner: tournament.owner,
       index: bracket.team2,
       team: bracket.team2 < 0 ? undefined : teams[bracket.team2],
       opponent: bracket.team1 < 0 ? undefined : teams[bracket.team1],
