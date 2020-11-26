@@ -149,9 +149,8 @@ function createTournament(info, callback) {
                 tournament = await tournament.save({ session });
 
                 // create brackets and assign the top-level bracket to the tournament
-                const [finalBracket, levelNum] = await createBrackets(session, tournament._id, teamsArray.length);
+                const finalBracket = await createBrackets(session, tournament._id, teamsArray.length);
                 tournament.finalBracket = finalBracket;
-                tournament.levelNum = levelNum;
                 await tournament.save({ session });
             } catch (err) {
                 // abort current transaction
