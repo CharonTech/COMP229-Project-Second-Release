@@ -73,7 +73,7 @@ function getTournamentWithBrackets(id, callback) {
         return;
     }
     const tournamentId = typeof (id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
-    
+
     // END validation
 
     Tournament
@@ -85,16 +85,16 @@ function getTournamentWithBrackets(id, callback) {
             for (const bracket of brackets) { // for each of the fetched brackets
                 if (bracket.children.length == 2) { // if the bracket has children
                     // replace children field with ids with actual bracket object
-                    
+
                     bracket.children[0] = brackets.find(b => b._id.equals(bracket.children[0]));
                     bracket.children[1] = brackets.find(b => b._id.equals(bracket.children[1]));
-                    
+
                     // replace parent fields of the children brackets with this bracket object
                     bracket.children[0].parent = bracket;
                     bracket.children[1].parent = bracket;
                 }
             }
-            // replace finalBracket field of the tournament with the actual bracket object            
+            // replace finalBracket field of the tournament with the actual bracket object
             tournament.finalBracket = brackets.find(b => b._id.equals(tournament.finalBracket));
             // set the top-level bracket's parent field as undefined
             tournament.finalBracket.parent = undefined;
@@ -465,7 +465,7 @@ async function createBrackets(session, tournamentId, teams) {
         brackets[0].team1 = 0;
         brackets[0].team2 = 1;
         brackets = await Bracket.create(brackets, { session });
-        return brackets[0]._id;
+        return [ brackets[0]._id, 0 ];
     }
 
     // save the final bracket to get the id
