@@ -9,6 +9,7 @@
   <button
     type="button"
     class="btn btn-secondary text-right float-right"
+    <% if (!team || !opponent || winner) {%> disabled <%}%>
     data-toggle="modal"
     data-target="#bracketFormModal"
     data-bracket-id="<%= bracket._id.toString() %>"

@@ -2,6 +2,9 @@
 <style>
   .tournament-container {
     overflow-x: auto;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
   }
   .team-box {
     width: 15rem;
@@ -12,9 +15,12 @@
 </style>
 
 <!-- Top-level container for the brackets -->
-<div method="POST" class="container-fluid margined tournament-container">
-  <%- include('partials/bracket', { bracket: finalBracket, teams: tournament.teams }) %>
+<div class="container">
+  <div method="POST" class="margined tournament-container">
+    <%- include('partials/bracket', { bracket: finalBracket, teams: tournament.teams }) %>
+  </div>
 </div>
+
 
 <!-- A modal (pop-up) for changing information on a bracket -->
 <div class="modal fade" id="bracketFormModal" tabindex="-1">
