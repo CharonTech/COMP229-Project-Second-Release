@@ -1,0 +1,18 @@
+<script>
+  $('#bracketFormModal').on('show.bs.modal', function (event) {
+    let button = $(event.relatedTarget);
+
+    let id = button.data('bracket-id');
+    let team1 = button.data('team1-name');
+    let score1 = button.data('team1-score');
+    let team2 = button.data('team2-name');
+    let score2 = button.data('team2-score');
+
+    let modal = $(this);
+    modal.find('#bracket-id').val(id);
+    modal.find('label[for="team1-score"]').text(team1);
+    modal.find('#team1-score').val(score1);
+    modal.find('label[for="team2-score"]').text(team2);
+    modal.find('#team2-score').val(score2);
+  });
+</script>

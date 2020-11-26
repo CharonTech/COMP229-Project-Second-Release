@@ -159,6 +159,7 @@ function setScoresOfBracket(id, scores, callback) {
 
             // save the changes
             await bracket.save();
+            callback(undefined);
         })
         .catch(callback);
 }

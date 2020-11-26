@@ -5,11 +5,15 @@
   <!-- Vertical flex box where children fill from top to bottom -->
   <div class="d-flex flex-column justify-content-center team-box">
     <%- include('teambox', {
+      bracket,
+      teams,
       index: bracket.team1,
       team: bracket.team1 < 0 ? undefined : teams[bracket.team1],
       score: bracket.score1
     }) %>
     <%- include('teambox', {
+      bracket,
+      teams,
       index: bracket.team2,
       team: bracket.team2 < 0 ? undefined : teams[bracket.team2],
       score: bracket.score2

@@ -6,7 +6,17 @@
   <span class="bg-white text-right px-2">
     <%= team ? team.name : "---------" %>
   </span>
-  <span class="bg-info text-right text-white float-right px-2">
+  <button
+    type="button"
+    class="btn btn-secondary text-right float-right"
+    data-toggle="modal"
+    data-target="#bracketFormModal"
+    data-bracket-id="<%= bracket._id.toString() %>"
+    data-team1-name="<%= bracket.team1 < 0 ? '' : teams[bracket.team1].name %>"
+    data-team1-score="<%= bracket.score1 %>"
+    data-team2-name="<%= bracket.team2 < 0 ? '' : teams[bracket.team2].name %>"
+    data-team2-score="<%= bracket.score2 %>"
+  >
     <%= score %>
-  </span>
+  </button>
 </span>

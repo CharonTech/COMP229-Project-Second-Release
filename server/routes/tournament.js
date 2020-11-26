@@ -1,11 +1,12 @@
 const router = require("express").Router();
 const tournamentController = require('../controllers/tournament');
+const bracketController = require('../controllers/bracket');
 const Tournament = require('../models/tournament');
 
 // helper function for guard purposes
 function requireAuth(req, res, next)
 {
-    //check if the user is logged in 
+    //check if the user is logged in
     if(!req.isAuthenticated())
     {
         return res.redirect('/login');
@@ -103,9 +104,29 @@ router.get('/view/:id', (req, res, next) => {
                 tournament: tournament,
                 Tournament: Tournament,
                 firstName: req.user ? req.user.firstName : "",
-                currentUser: req.user
+                currentUser: req.user,
+                additionalScripts: '../tournament/partials/bracketModalScript'
             });
         }
     });
-    
+
+});
+
+router.post('/view/:id', (req, res, next) => {
+    let id = req.params.id;
+    bracketController.setScoresOfBracket(
+        req.body['bracket-id'],
+        {
+            score1: Number(req.body['team1-score']),
+            score2: Number(req.body['team2-score'])
+        },
+        (err) => {
+            if (err) {
+                console.error(err);
+                res.end(err);
+            } else {
+                res.redirect(`/tournaments/view/${id}`);
+            }
+        }
+    );
 });

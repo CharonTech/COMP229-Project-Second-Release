@@ -1,14 +1,45 @@
 <% let finalBracket = tournament.finalBracket; %>
 <style>
-    .tournament-container {
-        overflow-x: auto;
-    }
-    .team-box {
-        width: 15rem;
-    }
+  .tournament-container {
+    overflow-x: auto;
+  }
+  .team-box {
+    width: 15rem;
+}
 </style>
 
 <!-- Top-level container for the brackets -->
-<div class="container-fluid margined tournament-container">
-<%- include('partials/bracket', { bracket: finalBracket, teams: tournament.teams }) %>
+<div method="POST" class="container-fluid margined tournament-container">
+  <%- include('partials/bracket', { bracket: finalBracket, teams: tournament.teams }) %>
+</div>
+
+<!-- A modal (pop-up) for changing information on a bracket -->
+<div class="modal fade" id="bracketFormModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change Bracket Information</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="bracketForm">
+          <input type="hidden" id="bracket-id" name="bracket-id">
+          <div class="form-group">
+            <label for="team1-score" class="col-form-label">Team1</label>
+            <input type="number" class="form-control" id="team1-score" name="team1-score">
+          </div>
+          <div class="form-group">
+            <label for="team2-score" class="col-form-label">Team2</label>
+            <input type="number" class="form-control" id="team2-score" name="team2-score">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="bracketForm">Save Changes</button>
+      </div>
+    </div>
+  </div>
 </div>
