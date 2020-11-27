@@ -3,7 +3,8 @@
     <script src="/scripts/app.js"></script>
 
 <!-- `additionalScripts` must be a string for the path of the partial to include -->
-<% if (title == "Tournament View") { %>
+<!-- This lets others also add custom scripts whenever they need to -->
+<% if (typeof additionalScripts !== 'undefined') { %>
     <%- include(additionalScripts) %>
 <% } %>
 
