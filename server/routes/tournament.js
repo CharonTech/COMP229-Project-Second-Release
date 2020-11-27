@@ -23,11 +23,6 @@ router.get("/create", requireAuth, tournamentController.displayCreatePage);
 /* POST request for the Create page */
 router.post("/create", requireAuth, (req, res) => {
     const participants = req.body.participantNames.split('\n');
-    if(participants.length != 2 && participants.length != 4 && participants.length != 8 && participants.length != 16)
-    {
-        req.flash('createMessage', 'Please enter 2, 4, 8 or 16 teams/participants!');
-        return res.redirect('/tournaments/create');
-    }
     tournamentController.createTournament({
         title: req.body.title,
         game: req.body.game,
@@ -35,7 +30,7 @@ router.post("/create", requireAuth, (req, res) => {
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
         teams: participants,
-        isActive: req.body.active == "on" ? true : false 
+        isActive: req.body.active == "on" ? true : false
     }, (err, tournament) => {
         if (err) {
             console.log(err);
@@ -55,11 +50,6 @@ router.get('/edit/:id', requireAuth, tournamentController.displayEditPage);
 router.post('/edit/:id', (req, res, next) => {
     const id = req.params.id
     const teams = req.body.participantNames.split('\n');
-    if(teams.length != 2 && teams.length != 4 && teams.length != 8 && teams.length != 16)
-    {
-        req.flash('createMessage', 'Please enter 2, 4, 8 or 16 teams/participants!');
-        return res.redirect(`/tournaments/edit/${id}`);
-    }
     tournamentController.updateTournament(id, {
         title: req.body.title,
         game: req.body.game,
@@ -67,7 +57,7 @@ router.post('/edit/:id', (req, res, next) => {
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
         teams: teams,
-        isActive: req.body.active == "on" ? true : false 
+        isActive: req.body.active == "on" ? true : false
     }, (err, tournament) => {
         if (err) {
             console.log(err);
@@ -90,7 +80,6 @@ router.get('/delete/:id', (req, res, next) => {
         }
     });
 });
-module.exports = router;
 
 router.get('/view/:id', (req, res, next) => {
     let id = req.params.id;
@@ -116,8 +105,9 @@ router.get('/view/:id', (req, res, next) => {
 
 });
 
+// POST to change scores of a bracket associated with the tournament with the given id
 router.post('/view/:id', (req, res, next) => {
-    let id = req.params.id;
+    let tournamentId = req.params.id;
     bracketController.setScoresOfBracket(
         req.body['bracket-id'],
         {
@@ -129,12 +119,13 @@ router.post('/view/:id', (req, res, next) => {
                 console.error(err);
                 res.end(err);
             } else {
-                res.redirect(`/tournaments/view/${id}`);
+                res.redirect(`/tournaments/view/${tournamentId}`);
             }
         }
     );
 });
 
+// POST to set the bracket as finished and decide the winner
 router.post('/bracket/finish/:id', (req, res, next) => {
     let tournamentId = req.params.id;
     bracketController.setWinnerOfBracket(req.body['bracket-finish-id'], (err, isFirstWon, parentBracket) => {
@@ -146,3 +137,5 @@ router.post('/bracket/finish/:id', (req, res, next) => {
         }
     });
 });
+
+module.exports = router;

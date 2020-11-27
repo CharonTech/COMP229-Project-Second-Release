@@ -9,7 +9,7 @@
   <button
     type="button"
     class="btn btn-secondary text-right float-right"
-    <% if (!team || !opponent || winner || !currentUser || !owner._id.equals(currentUser._id)) {%> disabled <%}%>
+    <% if (!team || !opponent || typeof winner === 'boolean' || !currentUser || !owner._id.equals(currentUser._id)) {%> disabled <%}%>
     data-toggle="modal"
     data-target="#bracketFormModal"
     data-bracket-id="<%= bracket._id.toString() %>"

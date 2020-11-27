@@ -12,10 +12,9 @@
       team: bracket.team1 < 0 ? undefined : teams[bracket.team1],
       opponent: bracket.team2 < 0 ? undefined : teams[bracket.team2],
       score: bracket.score1,
-      winner: bracket.isFirstWon      
+      winner: bracket.isFirstWon
     }) %>
     <%- include('teambox', {
-      tournament,
       bracket,
       currentUser: currentUser,
       owner: tournament.owner,

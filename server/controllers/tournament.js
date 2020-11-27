@@ -547,18 +547,34 @@ async function createBrackets(session, tournamentId, teams) {
     // Remove redundant brackets and merge the teams into the parent brackets
     for (let i = 0; i < numBracketsInLastLevel; i += 2) {
         const thisIndex = lastLevelStartIndex + i;
-        if (brackets[thisIndex].team2 < 0 && brackets[thisIndex + 1].team2 < 0) {
-            const parentIndex = (thisIndex - 1) / 2;
-            brackets[parentIndex].team1 = brackets[thisIndex].team1; // move the team
-            brackets[parentIndex].team2 = brackets[thisIndex + 1].team1; // move the team
-            brackets[parentIndex].children = []; // empty the children array
-            await brackets[parentIndex].save({ session });
-            await Bracket.findByIdAndDelete(brackets[thisIndex]._id).session(session).exec();
-            await Bracket.findByIdAndDelete(brackets[thisIndex + 1]._id).session(session).exec();
-        } else {
-            await brackets[thisIndex].save({ session });
-            await brackets[thisIndex + 1].save({ session });
+        const parentIndex = (thisIndex - 1) / 2;
+
+        // if (brackets[thisIndex].team2 < 0 && brackets[thisIndex + 1].team2 < 0) {
+        //     brackets[parentIndex].team1 = brackets[thisIndex].team1; // move the team
+        //     brackets[parentIndex].team2 = brackets[thisIndex + 1].team1; // move the team
+        //     // brackets[parentIndex].children = []; // empty the children array
+        //     await brackets[parentIndex].save({ session });
+        //     // await Bracket.findByIdAndDelete(brackets[thisIndex]._id).session(session).exec();
+        //     // await Bracket.findByIdAndDelete(brackets[thisIndex + 1]._id).session(session).exec();
+        // } else if (brackets[thisIndex].team2 < 0) {
+        //     brackets[parentIndex].team1 = brackets[thisIndex].team1;
+        //     await brackets[parentIndex].save({ session });
+        // } else if (brackets[thisIndex + 1].team2 < 0) {
+        //     brackets[parentIndex].team2 = brackets[thisIndex + 1].team1;
+        //     await brackets[parentIndex].save({ session });
+        // } else {
+        //     await brackets[thisIndex].save({ session });
+        //     await brackets[thisIndex + 1].save({ session });
+        // }
+        if (brackets[thisIndex].team2 < 0) {
+            brackets[parentIndex].team1 = brackets[thisIndex].team1;
         }
+        if (brackets[thisIndex + 1].team2 < 0) {
+            brackets[parentIndex].team2 = brackets[thisIndex + 1].team1;
+        }
+        await brackets[parentIndex].save({ session });
+        await brackets[thisIndex].save({ session });
+        await brackets[thisIndex + 1].save({ session });
     }
     return brackets[0]._id;
 }
