@@ -1,5 +1,7 @@
 const moment = require('moment');
 const passport = require('passport');
+const tournamentController = require('./tournament');
+
 // define the Tournament model
 const Tournament = require("../models/tournament");
 
@@ -8,8 +10,7 @@ const User = require('../models/user').userModel;
 
 // Display Home Page
 module.exports.displayHomePage = (req, res) => {
-
-    Tournament.find((err, tournaments) => {
+    tournamentController.getActiveTournamentList((err, tournaments) => {
         if (err)
         {
             return console.error(err);
@@ -21,6 +22,7 @@ module.exports.displayHomePage = (req, res) => {
                 tournaments: tournaments,
                 moment: moment,
                 firstName: req.user ? req.user.firstName : "",
+                additionalScripts: '../tournament/partials/tournamentStatusModalScript'
             });
         }
     });
@@ -42,7 +44,7 @@ module.exports.displayRegisterPage = (req, res) => {
     {
         return res.redirect('/');
     }
-  
+
 };
 
 // Process register page
@@ -58,7 +60,7 @@ module.exports.processRegisterPage = (req, res) => {
     User.register(newUser, req.body.password, (err) => {
         //server error
         if (err) {
-      
+
             if (err.name == "UserExistsError") {
                 req.flash("registerMessage", "Registration Error: User already exists!");
             }
@@ -74,7 +76,7 @@ module.exports.processRegisterPage = (req, res) => {
         else {
             // if no error is present, registration successful
             //redirect the user, authenticate user
-      
+
             return passport.authenticate('local')(req, res, () => {
                 res.redirect('/tournaments');
             });

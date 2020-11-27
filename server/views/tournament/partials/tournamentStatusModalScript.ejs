@@ -1,0 +1,15 @@
+<script>
+  $('#tournamentStatusModal').on('show.bs.modal', function (event) {
+    let button = $(event.relatedTarget);
+
+    let tournamentName = button.data('tournament-name');
+    let top4Teams = button.data('top4-teams').split(',');
+
+    let modal = $(this);
+    modal.find('#tournamentStatusName').text(tournamentName);
+
+    for (let i = 0; i < 4; i++) {
+      modal.find(`#tournamentStatusTeam${i + 1}`).text(top4Teams[i] || '--------');
+    }
+  });
+</script>

@@ -67,6 +67,31 @@ let displayCreatePage = (req, res) => {
 };
 
 /**
+ * Get the list of active tournaments with their leading teams
+ *
+ * @param callback Callback function with (err, tournaments) signature
+ */
+function getActiveTournamentList(callback) {
+    Tournament
+        .find({ isActive: true })
+        .populate('finalBracket')
+        .exec()
+        .then(async tournaments => {
+            for (const tournament of tournaments) {
+                if (tournament.finalBracket && tournament.finalBracket.children.length == 2) {
+                    tournament.finalBracket.children[0] =
+                        await Bracket.findById(tournament.finalBracket.children[0]).exec();
+                    tournament.finalBracket.children[1] =
+                        await Bracket.findById(tournament.finalBracket.children[1]).exec();
+                }
+            }
+
+            callback(undefined, tournaments);
+        })
+        .catch(callback);
+}
+
+/**
  * Get the tournament information with the associated brackets **fully populated**
  *
  * @param id ID of the tournament
@@ -436,6 +461,7 @@ function deleteTournament(id, callback) {
 }
 
 module.exports = {
+    getActiveTournamentList,
     getTournamentWithBrackets,
     createTournament,
     updateTournament,
