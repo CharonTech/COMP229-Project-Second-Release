@@ -4,7 +4,7 @@
     <%- include('../partials/head.ejs') -%>
   </head>
 
-  <body id="authBody">
+  <body id="formBody">
   
     <%- include('../partials/main_nav.ejs') -%>
     <main class="container margined">
@@ -16,7 +16,7 @@
         <% } %>
 
         <div class="row">
-            <div class="offset-md-4 col-md-4" id="authForm">
+            <div class="offset-md-4 col-md-4" id="styledForm">
                 <h1><%= heading %></h1>
                 <form method="POST" autocomplete="off" >
                     <%- body %>

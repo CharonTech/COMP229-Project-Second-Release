@@ -1,7 +1,13 @@
 <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/scripts/app.js"></script>
-  
+
+<!-- `additionalScripts` must be a string for the path of the partial to include -->
+<!-- This lets others also add custom scripts whenever they need to -->
+<% if (typeof additionalScripts !== 'undefined') { %>
+    <%- include(additionalScripts) %>
+<% } %>
+
   <!-- Footer-->
   <footer class="bg-dark py-5">
       <div class="container">

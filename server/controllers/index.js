@@ -32,7 +32,7 @@ module.exports.displayRegisterPage = (req, res) => {
     {
         res.render('auth/register',
             {
-                layout: 'layouts/authLayout',
+                layout: 'layouts/formLayout',
                 title: "Register",
                 messages: req.flash("registerMessage"),
                 heading: "Registration"
@@ -64,7 +64,7 @@ module.exports.processRegisterPage = (req, res) => {
             }
             return res.render('auth/register',
                 {
-                    layout: "layouts/authLayout",
+                    layout: "layouts/formLayout",
                     title: "Register",
                     messages: req.flash("registerMessage"),
                     firstName: req.user ? req.user.firstName : '',
@@ -88,7 +88,7 @@ module.exports.displayLoginPage = (req, res) => {
     {
         res.render('auth/login',
         {
-            layout: "layouts/authLayout",
+            layout: "layouts/formLayout",
             title: "Login",
             messages: req.flash("loginMessage"),
             heading: "User Login"

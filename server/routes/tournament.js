@@ -1,13 +1,12 @@
 const router = require("express").Router();
 const tournamentController = require('../controllers/tournament');
-
-// define the Tournament model
-const Tournament = require("../models/tournament");
+const bracketController = require('../controllers/bracket');
+const Tournament = require('../models/tournament');
 
 // helper function for guard purposes
 function requireAuth(req, res, next)
 {
-    //check if the user is logged in 
+    //check if the user is logged in
     if(!req.isAuthenticated())
     {
         return res.redirect('/login');
@@ -30,7 +29,8 @@ router.post("/create", requireAuth, (req, res) => {
         owner: req.user,
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
-        teams: participants
+        teams: participants,
+        isActive: req.body.active == "on" ? true : false
     }, (err, tournament) => {
         if (err) {
             console.log(err);
@@ -57,6 +57,7 @@ router.post('/edit/:id', (req, res, next) => {
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
         teams: teams,
+        isActive: req.body.active == "on" ? true : false
     }, (err, tournament) => {
         if (err) {
             console.log(err);
@@ -65,14 +66,6 @@ router.post('/edit/:id', (req, res, next) => {
             res.redirect('/tournaments');
         }
     });
-
-    // let updatedTournament = Tournament({
-    //     "_id": id,
-    //     "title": req.body.title,
-    //     "game": req.body.game,
-    //     "beginsAt": new Date(req.body.beginsAt + 1000*60),
-    //     "endsAt": new Date(req.body.endsAt) + 1
-    // });
 });
 
 /* GET to perform  Deletion - DELETE Operation */
@@ -87,4 +80,62 @@ router.get('/delete/:id', (req, res, next) => {
         }
     });
 });
+
+router.get('/view/:id', (req, res, next) => {
+    let id = req.params.id;
+    tournamentController.getTournamentWithBrackets(id, (err, tournament) => {
+        if (err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            res.render('tournament/view',
+            {
+                title: "Tournament View",
+                tournament: tournament,
+                Tournament: Tournament,
+                firstName: req.user ? req.user.firstName : "",
+                currentUser: req.user,
+                additionalScripts: '../tournament/partials/bracketModalScript'
+            });
+        }
+    });
+
+});
+
+// POST to change scores of a bracket associated with the tournament with the given id
+router.post('/view/:id', (req, res, next) => {
+    let tournamentId = req.params.id;
+    bracketController.setScoresOfBracket(
+        req.body['bracket-id'],
+        {
+            score1: Number(req.body['team1-score']),
+            score2: Number(req.body['team2-score'])
+        },
+        (err) => {
+            if (err) {
+                console.error(err);
+                res.end(err);
+            } else {
+                res.redirect(`/tournaments/view/${tournamentId}`);
+            }
+        }
+    );
+});
+
+// POST to set the bracket as finished and decide the winner
+router.post('/bracket/finish/:id', (req, res, next) => {
+    let tournamentId = req.params.id;
+    bracketController.setWinnerOfBracket(req.body['bracket-finish-id'], (err, isFirstWon, parentBracket) => {
+        if (err) {
+            console.error(err);
+            res.end(err);
+        } else {
+            res.redirect(`/tournaments/view/${tournamentId}`);
+        }
+    });
+});
+
 module.exports = router;

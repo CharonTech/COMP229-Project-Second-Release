@@ -1,8 +1,8 @@
 <!-- Navigation-->
-  <% if(title == "Home Page" || title == "Register" || title == "Login") {%>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+  <% if(title == "Tournaments" || title == "Tournament View") {%>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav" style="background-color: rgba(220, 130, 91, 0.9);">
   <%} else {%>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav" style="background-color: rgba(0, 0, 0, 0.5);">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
   <%}%>
         <div class="container">
             <!--Logo Insertion-->
@@ -14,8 +14,8 @@
                 <ul class="navbar-nav ml-auto my-2 my-lg-0">
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/tournaments/create"><button type="button" class="btn btn-info">Create A
                                 Tournament</button></a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/tournaments"><button type="button" class="btn btn-info">Tournaments
-                                List</button></a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/tournaments"><button type="button" class="btn btn-info">Your Tournaments
+                                </button></a></li>
                     
                     <% if(typeof firstName == "string" && firstName) {%>
                     <li class="nav-text">Welcome, <%= firstName %></li>

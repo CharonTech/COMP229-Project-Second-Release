@@ -1,0 +1,42 @@
+<!-- Takes care of rendering each bracket along with its children -->
+
+<!-- Flex box which children start to fill from the right side -->
+<div class="d-flex flex-row-reverse my-3">
+  <!-- Vertical flex box where children fill from top to bottom -->
+  <div class="d-flex flex-column justify-content-center team-box">
+    <%- include('teambox', {
+      bracket,
+      currentUser: currentUser,
+      owner: owner,
+      index: bracket.team1,
+      team: bracket.team1 < 0 ? undefined : teams[bracket.team1],
+      opponent: bracket.team2 < 0 ? undefined : teams[bracket.team2],
+      score: bracket.score1,
+      winner: bracket.isFirstWon
+    }) %>
+    <%- include('teambox', {
+      bracket,
+      currentUser: currentUser,
+      owner: tournament.owner,
+      index: bracket.team2,
+      team: bracket.team2 < 0 ? undefined : teams[bracket.team2],
+      opponent: bracket.team1 < 0 ? undefined : teams[bracket.team1],
+      score: bracket.score2,
+      winner: bracket.isFirstWon
+    }) %>
+  </div>
+
+  <% if (bracket.children.length > 0) { %>
+    <div class="d-flex flex-column justify-content-center">
+      <img src="/assets/images/BigBrace.png" style="width:2rem; height:50%;">
+    </div>
+  <% } %>
+
+  <!-- Children brackets -->
+  <div class="flex-fill d-flex flex-column justify-content-between">
+    <% if (bracket.children.length > 0) { %>
+      <%- include('bracket', { bracket: bracket.children[0], teams }) %>
+      <%- include('bracket', { bracket: bracket.children[1], teams }) %>
+    <% } %>
+  </div>
+</div>

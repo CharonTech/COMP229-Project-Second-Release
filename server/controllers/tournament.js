@@ -7,8 +7,6 @@ const Bracket = require('../models/bracket');
 
 // Display Tournament List Page
 let displayTournaments = (req, res, next) => {
-    // find all tournaments in the tournaments collection
-    console.log(req.user);
     Tournament.find((err, tournaments) => {
         if (err)
         {
@@ -31,8 +29,11 @@ let displayTournaments = (req, res, next) => {
 let displayCreatePage = (req, res) => {
     res.render('tournament/details',
     {
+        layout: "layouts/formLayout",
         title: "Create Tournament",
         tournament: "",
+        heading: "New Tournament",
+        messages: req.flash("createMessage"),
         firstName: req.user ? req.user.firstName : "",
         moment: moment
     });
@@ -53,8 +54,11 @@ let displayCreatePage = (req, res) => {
             //show the edit view
             res.render('tournament/details',
             {
+                layout: "layouts/formLayout",
                 title: 'Edit Tournament',
                 tournament: tournamentToEdit,
+                heading: "Edit Tournament",
+                messages: req.flash("editMessage"),
                 moment: moment,
                 firstName: req.user ? req.user.firstName : "",
             });
@@ -74,21 +78,49 @@ function getTournamentWithBrackets(id, callback) {
         callback(new Error("The tournament argument must be a string or an ObjectId"));
         return;
     }
-    const tournamentId = typeof(id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
+    const tournamentId = typeof (id) === 'string' ? new mongoose.Types.ObjectId(id) : id;
     // END validation
 
-    Tournament
-        .findById(tournamentId) // get the tournament from db
-        .exec()
-        .then(async tournament => {
+    mongoose.startSession()
+        .then(async session => {
+            session.startTransaction();
+
+            // fetch the tournament with the given id
+            const tournament = await Tournament.findById(tournamentId).session(session).exec();
+            if (!tournament) {
+                await session.abortTransaction();
+                session.endSession();
+                throw new Error(`Tournament with id ${tournamentId} not found`);
+            }
+
             // fetch all brackets associated with the given tournament
-            const brackets = await Bracket.find({ tournament: tournamentId }).exec();
+            let brackets = await Bracket.find({ tournament: tournamentId }).session(session).exec();
+
+            // check if the finalBracket id actually matches something in the brackets array
+            let finalBracket = brackets.find(b => b._id.equals(tournament.finalBracket));
+            if (!finalBracket) {
+                // something is wrong with the brackets, so regenerate them
+                await Bracket.deleteMany({ tournament: tournamentId }).session(session).exec();
+                tournament.finalBracket = await createBrackets(session, tournamentId, tournament.teams.length);
+                await tournament.save({ session });
+                brackets = await Bracket.find({ tournament: tournamentId }).session(session).exec();
+                finalBracket = brackets.find(b => b._id.equals(tournament.finalBracket));
+                if (!finalBracket) { // if it is still not found, something went wrong with regenerating brackets
+                    await session.abortTransaction();
+                    session.endSession();
+                    throw new Error(`Failed to create new brackets for tournament ${tournamentId}`);
+                }
+            }
+
+            await session.commitTransaction();
+            session.endSession();
 
             for (const bracket of brackets) { // for each of the fetched brackets
                 if (bracket.children.length == 2) { // if the bracket has children
                     // replace children field with ids with actual bracket object
-                    bracket.children[0] = brackets.find(b => b._id == bracket.children[0]);
-                    bracket.children[1] = brackets.find(b => b._id == bracket.children[1]);
+
+                    bracket.children[0] = brackets.find(b => b._id.equals(bracket.children[0]));
+                    bracket.children[1] = brackets.find(b => b._id.equals(bracket.children[1]));
 
                     // replace parent fields of the children brackets with this bracket object
                     bracket.children[0].parent = bracket;
@@ -97,8 +129,7 @@ function getTournamentWithBrackets(id, callback) {
             }
 
             // replace finalBracket field of the tournament with the actual bracket object
-            tournament.finalBracket = brackets.find(b => b._id == tournament.finalBracket);
-
+            tournament.finalBracket = brackets.find(b => b._id.equals(tournament.finalBracket));
             // set the top-level bracket's parent field as undefined
             tournament.finalBracket.parent = undefined;
 
@@ -121,7 +152,7 @@ function getTournamentWithBrackets(id, callback) {
  */
 function createTournament(info, callback) {
     // get only the needed fields
-    let { title, game, owner, beginsAt, endsAt, teams } = info;
+    let { title, game, owner, beginsAt, endsAt, teams, isActive } = info;
 
     // BEGIN validations
     if (!title) {
@@ -139,7 +170,7 @@ function createTournament(info, callback) {
     // END validation
 
     // new instance of tournament with the given teams
-    let tournament = new Tournament({ title, game, owner, beginsAt, endsAt });
+    let tournament = new Tournament({ title, game, owner, beginsAt, endsAt, isActive });
     tournament.teams = teamsArray;
 
     mongoose.startSession()
@@ -186,7 +217,7 @@ function createTournament(info, callback) {
  */
 function updateTournament(id, info, callback) {
     // get only the needed fields
-    let { title, game, owner, beginsAt, endsAt, teams } = info;
+    let { title, game, owner, beginsAt, endsAt, teams, isActive } = info;
 
     // BEGIN validation
     if (!(typeof(id) === 'string' || id instanceof mongoose.Types.ObjectId)) {
@@ -246,6 +277,11 @@ function updateTournament(id, info, callback) {
                     isChanged = true;
                 }
 
+                if (isActive !== tournament.isActive) {
+                    tournament.isActive = isActive;
+                    isChanged = true;
+                }
+
                 if (teamsArray.length !== tournament.teams.length) {
                     // rebuild the brackets if the length is changed
                     tournament.teams = teamsArray;
@@ -254,8 +290,7 @@ function updateTournament(id, info, callback) {
                     await Bracket.deleteMany({ tournament: tournamentId }).session(session).exec();
 
                     // create new brackets
-                    tournamentId.finalBracket = await createBrackets(session, tournamentId, teamsArray.length);
-
+                    tournament.finalBracket = await createBrackets(session, tournamentId, teamsArray.length);
                     isChanged = true;
                 } else {
                     // apply any changes to team names
@@ -344,8 +379,7 @@ function rebuildTournamentBrackets(id, newTeams, callback) {
 
                 // delete previously existing brackets and create new ones
                 await Bracket.deleteMany({ tournament: tournamentId }).session(session).exec();
-                tournamentId.finalBracket = await createBrackets(session, tournamentId, teamsArray.length);
-
+                tournament.finalBracket = await createBrackets(session, tournamentId, teamsArray.length);
                 tournament.teams = teamsArray;
                 await tournament.save({ session });
             } catch (err) {
@@ -472,7 +506,6 @@ async function createBrackets(session, tournamentId, teams) {
 
     // save the final bracket to get the id
     brackets = await Bracket.create(brackets, { session });
-
     // number of levels to add on top of the final bracket
     const lastLevel = Math.ceil(Math.log2(Math.ceil(teams / 2.0)));
 
@@ -514,19 +547,34 @@ async function createBrackets(session, tournamentId, teams) {
     // Remove redundant brackets and merge the teams into the parent brackets
     for (let i = 0; i < numBracketsInLastLevel; i += 2) {
         const thisIndex = lastLevelStartIndex + i;
-        if (brackets[thisIndex].team2 < 0 && brackets[thisIndex + 1].team2 < 0) {
-            const parentIndex = (thisIndex - 1) / 2;
-            brackets[parentIndex].team1 = brackets[thisIndex].team1; // move the team
-            brackets[parentIndex].team2 = brackets[thisIndex + 1].team1; // move the team
-            brackets[parentIndex].children = []; // empty the children array
-            await brackets[parentIndex].save({ session });
-            await Bracket.findByIdAndDelete(brackets[thisIndex]._id).session(session).exec();
-            await Bracket.findByIdAndDelete(brackets[thisIndex + 1]._id).session(session).exec();
-        } else {
-            await brackets[thisIndex].save({ session });
-            await brackets[thisIndex + 1].save({ session });
-        }
-    }
+        const parentIndex = (thisIndex - 1) / 2;
 
+        // if (brackets[thisIndex].team2 < 0 && brackets[thisIndex + 1].team2 < 0) {
+        //     brackets[parentIndex].team1 = brackets[thisIndex].team1; // move the team
+        //     brackets[parentIndex].team2 = brackets[thisIndex + 1].team1; // move the team
+        //     // brackets[parentIndex].children = []; // empty the children array
+        //     await brackets[parentIndex].save({ session });
+        //     // await Bracket.findByIdAndDelete(brackets[thisIndex]._id).session(session).exec();
+        //     // await Bracket.findByIdAndDelete(brackets[thisIndex + 1]._id).session(session).exec();
+        // } else if (brackets[thisIndex].team2 < 0) {
+        //     brackets[parentIndex].team1 = brackets[thisIndex].team1;
+        //     await brackets[parentIndex].save({ session });
+        // } else if (brackets[thisIndex + 1].team2 < 0) {
+        //     brackets[parentIndex].team2 = brackets[thisIndex + 1].team1;
+        //     await brackets[parentIndex].save({ session });
+        // } else {
+        //     await brackets[thisIndex].save({ session });
+        //     await brackets[thisIndex + 1].save({ session });
+        // }
+        if (brackets[thisIndex].team2 < 0) {
+            brackets[parentIndex].team1 = brackets[thisIndex].team1;
+        }
+        if (brackets[thisIndex + 1].team2 < 0) {
+            brackets[parentIndex].team2 = brackets[thisIndex + 1].team1;
+        }
+        await brackets[parentIndex].save({ session });
+        await brackets[thisIndex].save({ session });
+        await brackets[thisIndex + 1].save({ session });
+    }
     return brackets[0]._id;
 }

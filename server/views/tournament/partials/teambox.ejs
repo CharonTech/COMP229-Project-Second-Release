@@ -1,0 +1,23 @@
+<!-- Single box that represents each team and its score -->
+<span class="border border-info text-left lead bg-white">
+  <span class="bg-info text-left text-white px-2" >
+    <%= index < 0 ? " " : index + 1 %>
+  </span>
+  <span class="bg-white text-right px-2">
+    <%= team ? team.name : "---------" %>
+  </span>
+  <button
+    type="button"
+    class="btn btn-secondary text-right float-right"
+    <% if (!team || !opponent || typeof winner === 'boolean' || !currentUser || !owner._id.equals(currentUser._id)) {%> disabled <%}%>
+    data-toggle="modal"
+    data-target="#bracketFormModal"
+    data-bracket-id="<%= bracket._id.toString() %>"
+    data-team1-name="<%= bracket.team1 < 0 ? '' : teams[bracket.team1].name %>"
+    data-team1-score="<%= bracket.score1 %>"
+    data-team2-name="<%= bracket.team2 < 0 ? '' : teams[bracket.team2].name %>"
+    data-team2-score="<%= bracket.score2 %>"
+  >
+    <%= score %>
+  </button>
+</span>

@@ -203,7 +203,7 @@ header.masthead h1 {
   margin-top: 9rem;
   margin-bottom: 3rem;
 }
-#authBody {
+#formBody {
   background: linear-gradient(
       to bottom,
       rgba(100, 100, 100, 0.3) 0%,
@@ -216,8 +216,11 @@ header.masthead h1 {
   background-attachment: fixed;
   background-size: cover;
 }
-#authForm {
+#styledForm {
   background-color: rgba(200, 200, 200, 0.95);
   padding: 20px;
   border-radius: 10px;
+}
+section[id^="bracket"]:hover {
+  background-color: rgba(11, 221, 227, 0.3);
 }
