@@ -1,6 +1,4 @@
-<div class="container margined">
-  <h1>New Tournament</h1>
-    <form method="POST">
+
       <fieldset>
         <legend>Basic Info</legend>
           <div class="form-group">
@@ -31,18 +29,13 @@
             <textarea name="participantNames" class="form-control" id="participantNames"><%= tournament.teams ? tournament.teams.map(t => t.name).join("\n"): "" %></textarea>
           </div>
         </fieldset>
-        <!--
-        <div class="form-check">
-          <label class="seeds" for="seeds">
-            Randomize seeds
-          </label>
-          <input type="checkbox" id="randomizeSeeds">
-        </div>
-        -->
+        <fieldset class="form-check">
+          <input type="checkbox" class="form-check-input" id="active" name="active"
+           <% if(tournament.isActive) {%> checked <%}%>>
+          <label class="form-check-label" for="active">Active</label>
+          <br><br>
+        </fieldset>
       <fieldset>
-        <button type ="submit" class="btn btn-primary">Save the Tournament</button>
-        
+        <button type ="submit" class="btn btn-primary">Save the Tournament</button>        
         <a href="/tournaments" class="btn btn-warning"><i class="fas fa-undo"></i> Cancel</a>
       </fieldset>
-  </form>
-</div>

@@ -1,5 +1,5 @@
     <!-- Masthead-->
-    <header class="masthead">
+    <header id="homeHeader" class="masthead">
         <div class="container h-100">
             <div class="row h-100 align-items-center justify-content-center text-center">
                 <div class="col-lg-10 align-self-end">
@@ -27,21 +27,33 @@
                 <tr>
                   <th>Title</th>
                   <th class="text-center">Game Name</th>
-                  <th class="text-center">Start Date</th>
                   <th class="text-center">End date</th>
+                  <th></th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- Template Row -->
                 <% for (let count = 0; count < tournaments.length; count++) { %>
+                <% if (tournaments[count].isActive) {%>
                 <tr>
                   <td><%= tournaments[count].title %></td>
                   <td class="text-center"><%= tournaments[count].game %></td>
-                  <td class="text-center"><%=  moment(tournaments[count].beginsAt).format("MMM DD, YYYY") %></td>
                   <td class="text-center"><%= moment(tournaments[count].endsAt).format("MMM DD, YYYY") %></td>
+                  <td class="text-center">
+                    <a class="btn btn-sm btn-success" href="tournaments/view/<%= tournaments[count]._id %>">
+                        View
+                    </a>
+                  </td>
+                  <td class="text-center">
+                    <a class="btn btn-sm btn-warning" href="tournaments/view/<%= tournaments[count]._id %>">
+                        Results
+                    </a>
+                  </td>
 
                   </td>
                 </tr>
+                <% } %>
                 <% } %>
               </tbody>
             </table>

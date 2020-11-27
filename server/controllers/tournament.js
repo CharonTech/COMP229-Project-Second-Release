@@ -29,8 +29,11 @@ let displayTournaments = (req, res, next) => {
 let displayCreatePage = (req, res) => {
     res.render('tournament/details',
     {
+        layout: "layouts/formLayout",
         title: "Create Tournament",
         tournament: "",
+        heading: "New Tournament",
+        messages: req.flash("createMessage"),
         firstName: req.user ? req.user.firstName : "",
         moment: moment
     });
@@ -51,8 +54,11 @@ let displayCreatePage = (req, res) => {
             //show the edit view
             res.render('tournament/details',
             {
+                layout: "layouts/formLayout",
                 title: 'Edit Tournament',
                 tournament: tournamentToEdit,
+                heading: "Edit Tournament",
+                messages: req.flash("editMessage"),
                 moment: moment,
                 firstName: req.user ? req.user.firstName : "",
             });
@@ -119,7 +125,7 @@ function getTournamentWithBrackets(id, callback) {
  */
 function createTournament(info, callback) {
     // get only the needed fields
-    let { title, game, owner, beginsAt, endsAt, teams } = info;
+    let { title, game, owner, beginsAt, endsAt, teams, isActive } = info;
 
     // BEGIN validations
     if (!title) {
@@ -137,7 +143,7 @@ function createTournament(info, callback) {
     // END validation
 
     // new instance of tournament with the given teams
-    let tournament = new Tournament({ title, game, owner, beginsAt, endsAt });
+    let tournament = new Tournament({ title, game, owner, beginsAt, endsAt, isActive });
     tournament.teams = teamsArray;
 
     mongoose.startSession()
@@ -184,7 +190,7 @@ function createTournament(info, callback) {
  */
 function updateTournament(id, info, callback) {
     // get only the needed fields
-    let { title, game, owner, beginsAt, endsAt, teams } = info;
+    let { title, game, owner, beginsAt, endsAt, teams, isActive } = info;
 
     // BEGIN validation
     if (!(typeof(id) === 'string' || id instanceof mongoose.Types.ObjectId)) {
@@ -244,6 +250,11 @@ function updateTournament(id, info, callback) {
                     isChanged = true;
                 }
 
+                if (isActive !== tournament.isActive) {
+                    tournament.isActive = isActive;
+                    isChanged = true;
+                }
+
                 if (teamsArray.length !== tournament.teams.length) {
                     // rebuild the brackets if the length is changed
                     tournament.teams = teamsArray;
@@ -253,7 +264,6 @@ function updateTournament(id, info, callback) {
 
                     // create new brackets
                     tournamentId.finalBracket = await createBrackets(session, tournamentId, teamsArray.length);
-                    console.log("finalBracket id ->" + tournamentId.finalBracket);
                     isChanged = true;
                 } else {
                     // apply any changes to team names
@@ -523,6 +533,5 @@ async function createBrackets(session, tournamentId, teams) {
             await brackets[thisIndex + 1].save({ session });
         }
     }
-    console.log("Created bracket id -> " + brackets[0]._id);
     return brackets[0]._id;
 }

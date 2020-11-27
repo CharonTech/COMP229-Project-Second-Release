@@ -23,13 +23,19 @@ router.get("/create", requireAuth, tournamentController.displayCreatePage);
 /* POST request for the Create page */
 router.post("/create", requireAuth, (req, res) => {
     const participants = req.body.participantNames.split('\n');
+    if(participants.length != 2 && participants.length != 4 && participants.length != 8 && participants.length != 16)
+    {
+        req.flash('createMessage', 'Please enter 2, 4, 8 or 16 teams/participants!');
+        return res.redirect('/tournaments/create');
+    }
     tournamentController.createTournament({
         title: req.body.title,
         game: req.body.game,
         owner: req.user,
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
-        teams: participants
+        teams: participants,
+        isActive: req.body.active == "on" ? true : false 
     }, (err, tournament) => {
         if (err) {
             console.log(err);
@@ -49,6 +55,11 @@ router.get('/edit/:id', requireAuth, tournamentController.displayEditPage);
 router.post('/edit/:id', (req, res, next) => {
     const id = req.params.id
     const teams = req.body.participantNames.split('\n');
+    if(teams.length != 2 && teams.length != 4 && teams.length != 8 && teams.length != 16)
+    {
+        req.flash('createMessage', 'Please enter 2, 4, 8 or 16 teams/participants!');
+        return res.redirect(`/tournaments/edit/${id}`);
+    }
     tournamentController.updateTournament(id, {
         title: req.body.title,
         game: req.body.game,
@@ -56,6 +67,7 @@ router.post('/edit/:id', (req, res, next) => {
         beginsAt: req.body.beginsAt,
         endsAt: req.body.endsAt,
         teams: teams,
+        isActive: req.body.active == "on" ? true : false 
     }, (err, tournament) => {
         if (err) {
             console.log(err);
@@ -64,14 +76,6 @@ router.post('/edit/:id', (req, res, next) => {
             res.redirect('/tournaments');
         }
     });
-
-    // let updatedTournament = Tournament({
-    //     "_id": id,
-    //     "title": req.body.title,
-    //     "game": req.body.game,
-    //     "beginsAt": new Date(req.body.beginsAt + 1000*60),
-    //     "endsAt": new Date(req.body.endsAt) + 1
-    // });
 });
 
 /* GET to perform  Deletion - DELETE Operation */
