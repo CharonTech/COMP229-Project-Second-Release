@@ -224,3 +224,9 @@ header.masthead h1 {
 section[id^="bracket"]:hover {
   background-color: rgba(11, 221, 227, 0.3);
 }
+
+@media print {
+  .no-print {
+    display: none;
+  }
+}
