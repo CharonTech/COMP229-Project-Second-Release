@@ -16,8 +16,12 @@
 
 <!-- Top-level container for the brackets -->
 <div class="container">
-  <div method="POST" class="margined tournament-container">
+  <div class="margined tournament-container" id="tournamentBrackets">
     <%- include('partials/bracket', { currentUser: currentUser, owner: tournament.owner, bracket: finalBracket, teams: tournament.teams }) %>
+  </div>
+
+  <div class="mb-4 no-print">
+    <button type="button" class="btn btn-info d-block mx-auto" onclick="window.print()">Save as PDF</button>
   </div>
 </div>
 
