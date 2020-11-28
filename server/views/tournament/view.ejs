@@ -15,7 +15,7 @@
 </style>
 
 <!-- Top-level container for the brackets -->
-<div class="container">
+<div class="container wrapper">
   <div class="margined tournament-container" id="tournamentBrackets">
     <%- include('partials/bracket', { currentUser: currentUser, owner: tournament.owner, bracket: finalBracket, teams: tournament.teams }) %>
   </div>
@@ -59,4 +59,5 @@
       </div>
     </div>
   </div>
+  <div class="push"></div>
 </div>
