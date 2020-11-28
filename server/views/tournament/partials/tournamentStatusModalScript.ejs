@@ -4,9 +4,31 @@
 
     let tournamentName = button.data('tournament-name');
     let top4Teams = button.data('top4-teams').split(',');
+    let finalStatus = button.data('final-status');
+    let topTeam = finalStatus === 'onPar' ? button.data('top-team').split(',') : button.data('top-team');
 
     let modal = $(this);
     modal.find('#tournamentStatusName').text(tournamentName);
+
+    let finalMatchStatusText = '';
+    let topTeamText = '';
+
+    if (finalStatus === 'onPar') {
+      finalMatchStatusText = 'Two teams have the same score!';
+      topTeamText = `${topTeam[0]} vs ${topTeam[1]}`;
+    } else if (finalStatus === 'leading') {
+      finalMatchStatusText = 'One team is leading, but the match is not finished!';
+      topTeamText = topTeam;
+    } else if (finalStatus === 'decided') {
+      finalMatchStatusText = 'The winner is decided!';
+      topTeamText = topTeam;
+    } else if (finalStatus === 'notStarted') {
+      finalMatchStatusText = 'The final match has not begun.';
+      topTeamText = topTeam || 'No teams are decided to go on final, yet.';
+    }
+
+    modal.find('#tournamentFinalMatchStatus').text(finalMatchStatusText);
+    modal.find('#tournamentFinalMatchTeam').text(topTeamText);
 
     for (let i = 0; i < 4; i++) {
       modal.find(`#tournamentStatusTeam${i + 1}`).text(top4Teams[i] || '--------');

@@ -44,6 +44,7 @@
                         View
                     </a>
                   </td>
+                  <% let finalStatus = tournaments[count].getTopTeam(); %>
                   <td class="text-center">
                     <button
                         type="button"
@@ -52,6 +53,9 @@
                         data-target="#tournamentStatusModal"
                         data-tournament-name="<%= tournaments[count].title %>"
                         data-top4-teams="<%= tournaments[count].getTop4Teams().join(',') %>"
+                        data-final-status="<%= finalStatus.status %>"
+                        data-top-team="<%= finalStatus.topTeam %>"
+                        data-winner-decided="<%= typeof tournaments[count].finalBracket === 'bool' %>"
                     >
                         Results
                     </button>
@@ -102,7 +106,12 @@
                 </div>
                 <div class="modal-body">
                     <section>
-                        <h6>Teams in Top 4</h6>
+                        <h5>Final Match Status</h5>
+                        <p id="tournamentFinalMatchStatus"></p>
+                        <p id="tournamentFinalMatchTeam"></p>
+                    </section>
+                    <section>
+                        <h5>Teams in Top 4</h5>
                         <ul>
                             <li id="tournamentStatusTeam1"></li>
                             <li id="tournamentStatusTeam2"></li>
