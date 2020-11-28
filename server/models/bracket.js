@@ -6,7 +6,7 @@ let BracketSchema = mongoose.Schema({
     team2: { type: Number, default: -1 },
     score1: { type: Number, default: 0 },
     score2: { type: Number, default: 0 },
-    parent: mongoose.Types.ObjectId,
+    parent: { type: mongoose.Types.ObjectId, index: true },
     children: [mongoose.Types.ObjectId], // must have either 0 or 2 items; default is []
     isFirstWon: { type: Boolean, default: undefined }
 });

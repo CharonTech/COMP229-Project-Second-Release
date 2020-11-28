@@ -35,7 +35,6 @@
                 <tbody>
                 <!-- Template Row -->
                 <% for (let count = 0; count < tournaments.length; count++) { %>
-                <% if (tournaments[count].isActive) {%>
                 <tr>
                   <td><%= tournaments[count].title %></td>
                   <td class="text-center"><%= tournaments[count].game %></td>
@@ -45,15 +44,25 @@
                         View
                     </a>
                   </td>
+                  <% let finalStatus = tournaments[count].getTopTeam(); %>
                   <td class="text-center">
-                    <a class="btn btn-sm btn-warning" href="tournaments/view/<%= tournaments[count]._id %>">
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-warning tournament-status-btn"
+                        data-toggle="modal"
+                        data-target="#tournamentStatusModal"
+                        data-tournament-name="<%= tournaments[count].title %>"
+                        data-top4-teams="<%= tournaments[count].getTop4Teams().join(',') %>"
+                        data-final-status="<%= finalStatus.status %>"
+                        data-top-team="<%= finalStatus.topTeam %>"
+                        data-winner-decided="<%= typeof tournaments[count].finalBracket === 'bool' %>"
+                    >
                         Results
-                    </a>
+                    </button>
                   </td>
 
                   </td>
                 </tr>
-                <% } %>
                 <% } %>
               </tbody>
             </table>
@@ -85,4 +94,35 @@
             </div>
         </div>
     </section>
-    
+
+    <div class="modal fade" id="tournamentStatusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Leading Teams for <span id="tournamentStatusName"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section>
+                        <h5>Final Match Status</h5>
+                        <p id="tournamentFinalMatchStatus"></p>
+                        <p id="tournamentFinalMatchTeam"></p>
+                    </section>
+                    <section>
+                        <h5>Teams in Top 4</h5>
+                        <ul>
+                            <li id="tournamentStatusTeam1"></li>
+                            <li id="tournamentStatusTeam2"></li>
+                            <li id="tournamentStatusTeam3"></li>
+                            <li id="tournamentStatusTeam4"></li>
+                        </ul>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
